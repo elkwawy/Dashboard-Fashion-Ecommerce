@@ -1,25 +1,33 @@
-import React, { useEffect, useState } from 'react'
-import Navbar from '../components/Navbar'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
-import Sidebar from '../components/Sidebar'
+import Cookies from 'js-cookie';
+import React, { useEffect, useState } from 'react';
 import { FaAngleRight } from "react-icons/fa6";
-import Loader from '../utils/Loader';
+import { Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+
+const Sidebar = React.lazy(() => import('../components/Sidebar'));
 
 const RootLayout = () => {
     const [sidebar, setSidebar] = useState(true);
     const openSidebar  = () => setSidebar(true) ;
     const closeSidebar  = () => setSidebar(false) ;
-
-    const loc = useLocation();
     const [baseRealLink, setBaseRealLink] = useState("");
     const [subRealLink, setSubRealLink] = useState("");
     const [lastRealLink, setLastRealLink] = useState("");
     const [baseLink, setBaseLink] = useState("");
     const [subLink, setSubLink] = useState("");
     const [lastLink, setLastLink] = useState("");
+    const loc = useLocation()
+    
+    const token = Cookies.get("token");
+    if (!token) return <Navigate to={"/"} />;
+    
+    useEffect(() => { 
+        
+    }, [])
+
 
     const linksToObj = {
-        "": { text: "Dashboard" },
+        "/dashboard": { text: "Dashboard" },
         "admin": { text: "Admin", children: {
             "basicInfo": { text: "Basic Info" }
         }},
@@ -65,17 +73,19 @@ const RootLayout = () => {
         setBaseLink(baseLink);
         setSubLink(subLink);
         setLastLink(lastLink);
-    }, [location.pathname]);
+    }, [loc.pathname]);
+
     return (
-        <div className='w-full flex overflow-x-hidden'>
+        <div className='w-full flex overflow-x-hidden h-screen '>
             <Sidebar sidebar={sidebar} closeSidebar={closeSidebar} baseLink={baseRealLink} subLink={subRealLink} lastLink={lastRealLink} />
             <div className='flex w-full flex-col'>
                 <Navbar sidebar={sidebar} openSidebar={openSidebar} />
                 
                 {/* whatever put in the App Router comes here  */}
-                <div className=' flex flex-col gap-5 w-full bg-[#F5F6FA] pt-5  h-full'>
+                {/* This is the only div that overflows (Scroll) */}
+                <div className=' flex flex-col gap-5 w-full  pt-5 h-screen bg-background-color  overflow-y-scroll openPageDiv'>
                     <div className='px-2 min-[300px]:px-5  flex gap-1 sm:gap-2 text-lg items-center w-full max-[373px]:text-xs max-sm:text-sm'>
-                        <NavLink to={'/'} className={({isActive}) => `${isActive ? "" : "text-sec-color"} trans hover:text-gray-600 `}>Dashboard</NavLink>
+                        <NavLink to={'/dashboard'} className={({isActive}) => `${isActive ? "" : "text-sec-color"} trans hover:text-gray-600 `}>Dashboard</NavLink>
                         {baseLink && <div className='flex items-center gap-1 sm:gap-2  '> 
                             <FaAngleRight className='text-sec-color mt-[2px]' />  
                             <span className='text-sec-color '><span className='max-[370px]:hidden'>{baseLink}</span> <span className='min-[370px]:hidden'>...</span></span> 
@@ -91,10 +101,11 @@ const RootLayout = () => {
                         </div>}
                     </div>
                     {/*  dashboard content comes here  */}
-                    <div className={'px-2 min-[300px]:px-5 bg-[#F5F6FA] w-full h-full'}>
+                    <div className={'px-2 min-[300px]:px-5  w-full h-full'}>
                         <Outlet /> 
                     </div>
                 </div>
+
             </div>
         </div>
         
