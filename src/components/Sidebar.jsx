@@ -51,7 +51,7 @@ const Sidebar = memo(({sidebar, closeSidebar, baseLink, subLink, lastLink}) => {
     return (
         <div className={`${sidebar ? "z-20 w-screen max-[700px]:fixed top-0 left-0 backdrop-blur-lg min-[700px]:w-[32%] lg:w-1/4 xl:w-1/6 sm:shadow-[4px_0px_10px_0px_#B3B3B366] " : " shadow-none w-0"} py-5  min-h-screen overflow-x-hidden trans flex flex-col gap-5 `}>
             {<div className={`w-full ${sidebar ? "px-3" : "p-0"} trans   border-b-2`}>
-                <button onClick={closeSidebar} className={` h-10  trans w-10 mb-5 rounded-md hover:bg-gray-200 flex items-center justify-center`}>
+                <button onClick={closeSidebar} className={` h-10  trans w-10 mb-5 rounded-md hover:bg-hover-color flex items-center justify-center`}>
                     <TbLayoutSidebarLeftCollapseFilled className="text-3xl" />
                 </button>
             </div>} 
@@ -59,7 +59,7 @@ const Sidebar = memo(({sidebar, closeSidebar, baseLink, subLink, lastLink}) => {
             {<div className={`${sidebar ? "px-5  z-0 max-w-full" : "max-w-0 px-0 -z-0"} trans flex flex-col gap-5 `}>
                 <div className='flex flex-col gap-3'>
                     <h2 className='text-sec-color text-sm'>Main Home</h2>
-                    <NavLink to={'/'} onClick={() => {if (window.innerWidth < 768) closeSidebar()}} className={({ isActive }) => `hover:pl-2 ${isActive ? "pl-2 beforeElement bg-main-color text-white" : " hover:bg-gray-200 "} py-2 trans rounded-md font-semibold flex items-center gap-2`}>
+                    <NavLink to={'/dashboard'} onClick={() => {if (window.innerWidth < 768) closeSidebar()}} className={({ isActive }) => `hover:pl-2 ${isActive ? "pl-2 beforeElement bg-main-color text-white" : " hover:bg-hover-color "} py-2 trans rounded-md font-semibold flex items-center gap-2`}>
                         <RxDashboard className='mt-0.5 text-lg' />
                         <p>Dashboard</p>
                     </NavLink>
@@ -70,7 +70,7 @@ const Sidebar = memo(({sidebar, closeSidebar, baseLink, subLink, lastLink}) => {
                         {
                             links.map((link, index) => (
                                 <div key={link.id} className='relative w-full flex flex-col gap-1'>
-                                    <button to={link.link} onClick={() => handleOpenList(index)}  className={`outline-0 hover:pl-2  ${baseLink == link.link ? "pl-2 beforeElement bg-main-color text-white" : openList[index] ? "bg-gray-200 pl-2" : " hover:bg-gray-200"} flex w-full justify-between items-center    py-2 trans rounded-md font-semibold `}>
+                                    <button to={link.link} onClick={() => handleOpenList(index)}  className={`outline-0 hover:pl-2  ${baseLink == link.link ? "pl-2 beforeElement bg-main-color text-white" : openList[index] ? "bg-gray-200 pl-2" : " hover:bg-hover-color"} flex w-full justify-between items-center    py-2 trans rounded-md font-semibold `}>
                                         <p className='flex gap-2 items-center '>
                                             {link.icon}
                                             {link.text}
@@ -82,7 +82,7 @@ const Sidebar = memo(({sidebar, closeSidebar, baseLink, subLink, lastLink}) => {
                                         {
                                             link.children.map((child, index) => (
                                                 <li key={child.id} className='flex-col cursor-pointer trans flex items-center justify-between'>
-                                                    <Link to={child.children && child.children.length > 0 ? location.pathname : child.link} onClick={() => {child.children ? handleCategoryOpenList(index) :  (window.innerWidth < 768) &&  closeSidebar() }} className={`w-full  trans py-1 ${ subLink == child.linkCompare ? "text-main-color pl-1" : " "} hover:bg-gray-200 hover:pl-1 rounded-sm outline-0 flex items-center justify-between`}>
+                                                    <Link to={child.children && child.children.length > 0 ? location.pathname : child.link} onClick={() => {child.children ? handleCategoryOpenList(index) :  (window.innerWidth < 768) &&  closeSidebar() }} className={`w-full  trans py-1 ${ subLink == child.linkCompare ? "text-main-color pl-1" : " "} hover:bg-hover-color hover:pl-1 rounded-sm outline-0 flex items-center justify-between`}>
                                                         <p className='flex gap-1 items-center   '>
                                                             <RxDot className={`text-xs  mt-0.5 `} />
                                                             {child.text}
@@ -93,7 +93,7 @@ const Sidebar = memo(({sidebar, closeSidebar, baseLink, subLink, lastLink}) => {
                                                         className={`flex flex-col gap-1 pl-3 text-sm trans w-full overflow-y-hidden`}>
                                                             {
                                                                 child.children && child.children.map((grandChild) => (
-                                                                    <Link to={grandChild.link} key={grandChild.id} onClick={() => {if (window.innerWidth < 768) closeSidebar()}} className={` cursor-pointer trans w-full ${(lastLink && lastLink == grandChild.linkCompare) && (subLink && child.linkCompare == subLink) ? "text-main-color pl-1" : "text-sec-color "} hover:bg-gray-200  rounded-sm py-1 hover:pl-1 flex items-center justify-between`}>
+                                                                    <Link to={grandChild.link} key={grandChild.id} onClick={() => {if (window.innerWidth < 768) closeSidebar()}} className={` cursor-pointer trans w-full ${(lastLink && lastLink == grandChild.linkCompare) && (subLink && child.linkCompare == subLink) ? "text-main-color pl-1" : "text-sec-color "} hover:bg-hover-color  rounded-sm py-1 hover:pl-1 flex items-center justify-between`}>
                                                                         <p className='flex gap-1 items-center '>
                                                                             <RxDot className={`text-xs  mt-0.5  `} />
                                                                             {grandChild.text}

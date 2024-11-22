@@ -9,6 +9,8 @@ export default {
       colors:{
         "main-color" : "var(--main-color)",
         "sec-color" : "var(--sec-color)",
+        "hover-color" : "var(--hover-color)",
+        "background-color" : "var(--background-color)",
       }
     },
   },
