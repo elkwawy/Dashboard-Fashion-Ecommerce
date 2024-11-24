@@ -7,11 +7,9 @@ import RootLayout from "./pages/RootLayout";
 import { getCurrentUser } from './redux/slices/userSlice';
 import Loader from "./utils/Loader";
 
-import { useDispatch } from 'react-redux';
-import { setUser } from './redux/slices/userSlice';
-import Products from './pages/Products/Products';
 import AddProduct from './pages/AddProduct/AddProduct';
 import AddUser from './pages/AddUser/AddUser';
+import Products from './pages/Products/Products';
 
 
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
