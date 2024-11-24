@@ -27,3 +27,7 @@ body{
         @apply absolute top-0 left-0 -translate-x-[21px] bg-[#4880FF] rounded-r-md w-1.5 h-full;
     }
 }
+
+input:checked + div > div {
+    background-color: #3b82f6;
+  }
