@@ -20,14 +20,15 @@ const RootLayout = () => {
     
     const linksToObj = {
         "/dashboard": { text: "Dashboard" },
-        "admin": { text: "Admin", children: {
-            "basicInfo": { text: "Basic Info" }
+        "admin": { text: "Admins", children: {
+            "adminList": { text: "Admins List" },
+            "newAdmin": { text: "Add new admin" },
         }},
-        "products": { text: "Product", children: {
+        "products": { text: "Products", children: {
             "products": { text: "Products" },
             "newProduct": { text: "New Product" }
         }},
-        "category": { text: "Category", children: {
+        "categories": { text: "Categories", children: {
             "women's": { text: "Women's", children: {
                 "categoryList": { text: "Category List" },
                 "newCategory": { text: "New Category" }
@@ -41,8 +42,8 @@ const RootLayout = () => {
                 "newCategory": { text: "New Category" }
             }}
         }},
-        "order": { text: "Order", children: {"orderList": {text:"Order List"} }},
-        "user": { text: "User", children:{"allUsers": {text:"User List"}, "newUser": {text:"New User"}}}
+        "order": { text: "Orders", children: {"orderList": {text:"Orders List"} }},
+        "user": { text: "Users", children:{"usersList": {text:"Users List"}, "newUser": {text:"New User"}}}
     }
     const userToken = Cookies.get('token');
     const nav = useNavigate();
