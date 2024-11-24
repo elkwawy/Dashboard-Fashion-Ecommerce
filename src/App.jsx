@@ -4,9 +4,11 @@ import { Toaster } from "react-hot-toast";
 import { useDispatch } from 'react-redux';
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
 import RootLayout from "./pages/RootLayout";
-import { getCurrentUser, setUser } from './redux/slices/userSlice';
+import { getCurrentUser } from './redux/slices/userSlice';
 import Loader from "./utils/Loader";
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
+const AdminList = React.lazy(() => import("./pages/admin/AdminList"));
+const AddNewAdmin = React.lazy(() => import("./pages/admin/AddNewAdmin"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 const Login = React.lazy(() => import("./Auth/Login"));
 
@@ -14,6 +16,8 @@ const Login = React.lazy(() => import("./Auth/Login"));
 // add routes here
 const routes = [ 
   {path:'/dashboard', element:<Dashboard/>},
+  {path:'/admin/adminList', element:<AdminList/>},
+  {path:'/admin/newAdmin', element:<AddNewAdmin/>},
   {path:'*', element:<NotFound />},
 ];
 
