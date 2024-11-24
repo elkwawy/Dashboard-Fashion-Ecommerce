@@ -5,10 +5,10 @@ import useShowToast from "./useShowToast";
 const useLogin = () => {
     const {showToast} = useShowToast(); 
     const dispatch = useDispatch();
-    const login = async (email, password) => { 
+    const login = async (email, password, remember) => { 
         try {
             // Store the token - call API 
-            dispatch(loginUser({email, password}));
+            dispatch(loginUser({email, password, remember}));
             
         } catch (err) {
             showToast("error", err);

@@ -14,6 +14,7 @@ export const API = {
   getUser: `${BASE_URL}/user/showbyid`,
   updateUser: `${BASE_URL}/user/update`,
   deleteUser: `${BASE_URL}/user/delete`,
+  getLoggedUser : `${BASE_URL}/user/getMe`,
   /* ======= Product ======= */
   showProducts: `${BASE_URL}/product/show`,
   createProduct: `${BASE_URL}/product/create`,

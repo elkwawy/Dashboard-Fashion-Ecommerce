@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
 import { FaAngleRight } from "react-icons/fa6";
-import { Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
 const Sidebar = React.lazy(() => import('../components/Sidebar'));
@@ -18,14 +18,6 @@ const RootLayout = () => {
     const [lastLink, setLastLink] = useState("");
     const loc = useLocation()
     
-    const token = Cookies.get("token");
-    if (!token) return <Navigate to={"/"} />;
-    
-    useEffect(() => { 
-        
-    }, [])
-
-
     const linksToObj = {
         "/dashboard": { text: "Dashboard" },
         "admin": { text: "Admin", children: {
@@ -52,6 +44,8 @@ const RootLayout = () => {
         "order": { text: "Order", children: {"orderList": {text:"Order List"} }},
         "user": { text: "User", children:{"allUsers": {text:"User List"}, "newUser": {text:"New User"}}}
     }
+    const userToken = Cookies.get('token');
+    const nav = useNavigate();
 
     useEffect(() => {
         const pathParts = location.pathname.split('/').filter(Boolean);
@@ -74,6 +68,11 @@ const RootLayout = () => {
         setSubLink(subLink);
         setLastLink(lastLink);
     }, [loc.pathname]);
+    
+
+    if (!userToken) { 
+        nav("/");
+    }
 
     return (
         <div className='w-full flex overflow-x-hidden h-screen '>
