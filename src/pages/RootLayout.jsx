@@ -82,10 +82,12 @@ const RootLayout = () => {
                 <Navbar sidebar={sidebar} openSidebar={openSidebar} />
                 
                 {/* whatever put in the App Router comes here  */}
+
                 {/* This is the only div that overflows (Scroll) */}
                 <div className=' flex flex-col gap-5 w-full  pt-5 h-screen bg-background-color  overflow-y-scroll openPageDiv'>
                     <div className='px-2 min-[300px]:px-5  flex gap-1 sm:gap-2 text-lg items-center w-full max-[373px]:text-xs max-sm:text-sm'>
                         <NavLink to={'/dashboard'} className={({isActive}) => `${isActive ? "" : "text-sec-color"} trans hover:text-gray-600 `}>Dashboard</NavLink>
+                        
                         {baseLink && <div className='flex items-center gap-1 sm:gap-2  '> 
                             <FaAngleRight className='text-sec-color mt-[2px]' />  
                             <span className='text-sec-color '><span className='max-[370px]:hidden'>{baseLink}</span> <span className='min-[370px]:hidden'>...</span></span> 

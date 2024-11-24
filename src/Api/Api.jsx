@@ -1,4 +1,4 @@
-const BASE_URL = `http://ecommerce-dot-code.vercel.app/api`;
+const BASE_URL = `https://ecommerce-dot-code.vercel.app/api`;
 
 export const API = {
   /* ======= Authentication ======= */
@@ -28,5 +28,4 @@ export const API = {
   updateOrder: `${BASE_URL}/order/update`,
   deleteOrder: `${BASE_URL}/order/delete`,
 
-  // adminInfo: `${BASE_URL}/auth/get-auth-admin`,
 };

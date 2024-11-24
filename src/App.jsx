@@ -6,6 +6,14 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 import RootLayout from "./pages/RootLayout";
 import { getCurrentUser } from './redux/slices/userSlice';
 import Loader from "./utils/Loader";
+
+import { useDispatch } from 'react-redux';
+import { setUser } from './redux/slices/userSlice';
+import Products from './pages/Products/Products';
+import AddProduct from './pages/AddProduct/AddProduct';
+import AddUser from './pages/AddUser/AddUser';
+
+
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const AdminList = React.lazy(() => import("./pages/admin/AdminList"));
 const AddNewAdmin = React.lazy(() => import("./pages/admin/AddNewAdmin"));
@@ -18,6 +26,9 @@ const routes = [
   {path:'/dashboard', element:<Dashboard/>},
   {path:'/admin/adminList', element:<AdminList/>},
   {path:'/admin/newAdmin', element:<AddNewAdmin/>},
+  {path:'/products/products', element:<Products/>},
+  {path:'/products/newProduct', element:<AddProduct/>},
+  {path:'/user/newUser', element:<AddUser/>},
   {path:'*', element:<NotFound />},
 ];
 
