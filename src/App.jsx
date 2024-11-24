@@ -6,6 +6,14 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 import RootLayout from "./pages/RootLayout";
 import { getCurrentUser, setUser } from './redux/slices/userSlice';
 import Loader from "./utils/Loader";
+
+import { useDispatch } from 'react-redux';
+import { setUser } from './redux/slices/userSlice';
+import Products from './pages/Products/Products';
+import AddProduct from './pages/AddProduct/AddProduct';
+import AddUser from './pages/AddUser/AddUser';
+
+
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 const Login = React.lazy(() => import("./Auth/Login"));
@@ -14,6 +22,10 @@ const Login = React.lazy(() => import("./Auth/Login"));
 // add routes here
 const routes = [ 
   {path:'/dashboard', element:<Dashboard/>},
+  {path:'/products/products', element:<Products/>},
+  {path:'/products/newProduct', element:<AddProduct/>},
+  {path:'/user/newUser', element:<AddUser/>},
+
   {path:'*', element:<NotFound />},
 ];
 
