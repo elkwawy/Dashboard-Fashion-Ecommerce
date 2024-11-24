@@ -6,9 +6,6 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 import RootLayout from "./pages/RootLayout";
 import { getCurrentUser, setUser } from './redux/slices/userSlice';
 import Loader from "./utils/Loader";
-
-import { useDispatch } from 'react-redux';
-import { setUser } from './redux/slices/userSlice';
 import Products from './pages/Products/Products';
 import AddProduct from './pages/AddProduct/AddProduct';
 import AddUser from './pages/AddUser/AddUser';
