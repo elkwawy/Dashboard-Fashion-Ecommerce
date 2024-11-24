@@ -1,8 +1,7 @@
-import Cookies from 'js-cookie';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { useSelector } from 'react-redux';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import loginBackground from "../assets/loginBackground.webp";
 import useLogin from '../hooks/useLogin';
 import useShowToast from '../hooks/useShowToast';
@@ -11,18 +10,20 @@ import Loader from './../utils/Loader';
 const  Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [remember, setRemember] = useState(false);
+  // const [remember, setRemember] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setemailError] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const navigate = useNavigate();
-  const {user, status, error} = useSelector((state) => state.user)
+  const {user, status, error} = useSelector((state) => state.user);
+  
   const {login} = useLogin();
   const {showToast} = useShowToast(); 
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
   const passwordRegex = /^.{8,}$/;
   
-  const token = Cookies.get("token");
+
+  
 
   const handleSubmit = ((e) => {
     e.preventDefault();
@@ -31,11 +32,14 @@ const  Login = () => {
   });
   
   const memoizedLogin = useCallback(() => { 
-    login(email, password);
+    if (rememberMeRef&& rememberMeRef.current){ 
+      // console.log(rememberMeRef.current.checked)
+      login(email, password, rememberMeRef.current.checked);
+    }
   }, [email, password])
 
   useEffect(() => { 
-      if (status === "succeeded") {
+      if (status === "succeeded" && !error) {
           if (user) { 
               if (user.role === "admin")  { 
                   showToast("success", "Login succeeded");
@@ -46,13 +50,14 @@ const  Login = () => {
                   showToast("error", "You should be an admin to enter !");
               }
           }
-
       }
       else if (status === "failed") { 
           showToast("error", error );
       }
   }, [user, status]);
 
+  const rememberMeRef = useRef(null);
+    
   const changeEmail = (e) => { 
     setEmail(e.target.value);
   }
@@ -86,14 +91,10 @@ const  Login = () => {
   const toggleShowPassword = () => { 
     setShowPassword(prev => !prev);
   }
-
-  if (token) {
-    return <Navigate to={'/dashboard'} />;
-  }
-
+  
   return (
     <div className="fixed top-0 left-0 h-screen w-full z-50  bg-main-color flex items-center justify-center">
-      <img draggable={false} src={loginBackground} alt="background" className='w-full h-screen max-sm:hidden fixed top-0 left-0 z-10' />
+      <img draggable={false} src={loginBackground} alt="background" className='w-full h-screen max-sm:hidden select-none fixed top-0 left-0 z-10' />
       
       <div className="bg-white p-4 sm:p-8 rounded-lg shadow-md z-50 w-11/12 sm:w-[450px]">
         <h2 className="text-2xl font-bold text-center mb-2">Login to Account</h2>
@@ -133,23 +134,22 @@ const  Login = () => {
                 className={`w-full relative p-2 outline-1 border-2 rounded-md bg-gray-50 ${passwordError ? "outline-red-400 border-red-400" : "focus:outline-main-color"} `}
                 
               />
-              <button type='button' onClick={toggleShowPassword} className=' absolute top-1/2 -translate-y-1/2 right-2 '>
+              {password.length > 0 &&<button type='button' onClick={toggleShowPassword} className=' absolute top-1/2 -translate-y-1/2 right-2 '>
                 {showPassword && <LuEyeOff />}
                 {!showPassword && <LuEye />}
-              </button>
+              </button>}
               
             </div>
           </div>
           
           <div className="flex items-center justify-between ">
-            <label className="flex items-center cursor-pointer">
+            <label className="flex items-center text-sm text-gray-600 cursor-pointer select-none">
               <input
                 type="checkbox"
-                checked={remember}
-                onChange={(e) => setRemember(e.target.checked)}
+                ref={rememberMeRef}
                 className="mr-1 mt-0.5 cursor-pointer"
               />
-              <span className="text-sm text-gray-600">Remember Password</span>
+              Remember me
             </label>
             <a href="#" className="text-sm text-blue-500 hover:underline">
               Forget Password?

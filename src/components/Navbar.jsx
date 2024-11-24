@@ -28,7 +28,7 @@ const Navbar = memo(({sidebar, openSidebar}) => {
                     {/* IMG */}
                     <div className="w-8 h-8 bg-gray-300 rounded-full" />
                     {user && <span>{user.name}</span>}
-                    {status === "loading" && <span className="h-3 w-8 bg-gray-200 animate-pulse"></span>}
+                    {status === "loading" && <span className="h-4 w-28 bg-gray-100 animate-pulse"></span>}
                     <FaAngleDown className="mt-0.5" />
                     {/* Arrowdown */}
                 </div>
