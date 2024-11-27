@@ -9,12 +9,18 @@ import Loader from "./utils/Loader";
 
 import Products from './pages/Products/Products';
 import AddProduct from './pages/AddProduct/AddProduct';
-import AddUser from './pages/AddUser/AddUser';
 
 
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
+
+const UsersList = React.lazy(() => import("./pages/Users/UsersList"));
+const AddUser = React.lazy(() => import("./pages/Users/AddUser"));
+const UpdataUser = React.lazy(() => import("./pages/Users/UpdateUser"));
+const AddCategory = React.lazy(() => import("./pages/Categories/AddCategory"));
+
 const AdminList = React.lazy(() => import("./pages/admin/AdminList"));
 const AddNewAdmin = React.lazy(() => import("./pages/admin/AddNewAdmin"));
+
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 const Login = React.lazy(() => import("./Auth/Login"));
 
@@ -26,7 +32,10 @@ const routes = [
   {path:'/admin/newAdmin', element:<AddNewAdmin/>},
   {path:'/products/products', element:<Products/>},
   {path:'/products/newProduct', element:<AddProduct/>},
+  {path:'/user/usersList', element:<UsersList/>},
+  {path:'/user/updateUser/:id', element:<UpdataUser/>},
   {path:'/user/newUser', element:<AddUser/>},
+  {path:'/categories/addCategory', element:<AddCategory/>},
   {path:'*', element:<NotFound />},
 ];
 
@@ -55,7 +64,6 @@ const App = () => {
     if (userToken) {
       dispatch(getCurrentUser(JSON.parse(userToken)));
     }
-    
   }, [dispatch]);
 
   

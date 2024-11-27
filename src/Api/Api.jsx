@@ -9,12 +9,19 @@ export const API = {
   resetPassword: `${BASE_URL}/auth/resetPassword`,
 
   /* ======= User ======= */
-  showUsers: `${BASE_URL}/user/show`,
-  createUser: `${BASE_URL}/user/create`,
-  getUser: `${BASE_URL}/user/showbyid`,
-  updateUser: `${BASE_URL}/user/update`,
-  deleteUser: `${BASE_URL}/user/delete`,
-  getLoggedUser : `${BASE_URL}/user/getMe`,
+  showUsers: `${BASE_URL}/user`,
+  createUser: `${BASE_URL}/user`,
+  deleteUser: `${BASE_URL}/user`,
+  getUser: `${BASE_URL}/user`,
+  updateUser: `${BASE_URL}/user`,
+  /* ======= Category ======= */
+  showCategories: `${BASE_URL}/category`,
+  createCategory: `${BASE_URL}/category`,
+  deleteCategory: `${BASE_URL}/category`,
+  getCategory: `${BASE_URL}/category`,
+  updateCategory: `${BASE_URL}/category`,
+
+
   /* ======= Product ======= */
   showProducts: `${BASE_URL}/product/show`,
   createProduct: `${BASE_URL}/product/create`,
@@ -27,5 +34,4 @@ export const API = {
   getOrder: `${BASE_URL}/order/showbyid`,
   updateOrder: `${BASE_URL}/order/update`,
   deleteOrder: `${BASE_URL}/order/delete`,
-
 };
