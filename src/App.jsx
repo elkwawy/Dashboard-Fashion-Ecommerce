@@ -9,14 +9,19 @@ import Loader from "./utils/Loader";
 
 import Products from './pages/Products/Products';
 import AddProduct from './pages/AddProduct/AddProduct';
-import AddUser from './pages/AddUser/AddUser';
+import AddUser from './pages/Users/AddUser';
 
 
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
+
+
+
+
 const AdminList = React.lazy(() => import("./pages/admin/AdminList"));
 const AddNewAdmin = React.lazy(() => import("./pages/admin/AddNewAdmin"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 const Login = React.lazy(() => import("./Auth/Login"));
+
 
 
 // add routes here
@@ -55,7 +60,6 @@ const App = () => {
     if (userToken) {
       dispatch(getCurrentUser(JSON.parse(userToken)));
     }
-    
   }, [dispatch]);
 
   
