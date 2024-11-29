@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { API } from "../../Api/Api";
+import { getAuthHeader } from "../../Auth/getAuthHeader";
+const {headers} = getAuthHeader() ? getAuthHeader() : {}; 
 
 export const loginUser = createAsyncThunk('user/loginUser', async ( {email, password, remember}) => {
     
@@ -22,31 +23,34 @@ export const loginUser = createAsyncThunk('user/loginUser', async ( {email, pass
 export const getCurrentUser = createAsyncThunk('user/getCurrentUser', async (token, thunkAPI) => {
     try {
         const response = await axios.get(`https://ecommerce-dot-code.vercel.app/api/user/getMe`, {
-            headers: {
-                Authorization: token, // Ensure the token is prefixed with "Bearer"
-            },
+            headers,
         });
 
         return response.data.data; // Return the user data to Redux
     } catch (error) {
-        console.error('Error in getCurrentUser:', error.message);
+        console.error('Error in getCurrentUser:', error);
 
-        // Log detailed error info
         if (error.response) {
             console.error('Response data:', error.response.data);
             console.error('Response status:', error.response.status);
-        }
 
-        // Reject with a meaningful error message
-        return thunkAPI.rejectWithValue(
-            error.response?.data?.message || 'Failed to fetch user data'
-        );
+            if (error.response.data?.message) {
+                return thunkAPI.rejectWithValue(error.response.data.message);
+            }
+            return thunkAPI.rejectWithValue('Failed to fetch user data (server error)');
+        } else if (error.request) {
+            console.error('Request made but no response received:', error.request);
+            return thunkAPI.rejectWithValue('Network error: Failed to connect to the server');
+        } else {
+            console.error('Unexpected error:', error);
+            return thunkAPI.rejectWithValue(error.message || 'Unexpected error occurred');
+        }
     }
 });
 
 export const logUserOut = createAsyncThunk('user/logUserOut', async ( ) => {
     Cookies.remove("token"); 
-    window.location.reload();
+    window.location.href = "/";
     return null;
 });
 
@@ -96,11 +100,7 @@ const userSlice = createSlice({
         })
         .addCase(getCurrentUser.rejected, (state, action) => {
             state.status = "failed";
-            if (action.error.message == "Request failed with status code 401") { 
-                state.error = "Wrong email or password";
-            }
-            else
-                state.error = action.error.message;
+            state.error = action.payload || 'Something went wrong';
         })
         .addCase(logUserOut.pending, (state) => {
             state.status = "loading";

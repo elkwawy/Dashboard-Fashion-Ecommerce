@@ -1,11 +1,16 @@
+import Cookies from 'js-cookie';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import loginBackground from "../assets/loginBackground.webp";
 import useLogin from '../hooks/useLogin';
 import useShowToast from '../hooks/useShowToast';
 import Loader from './../utils/Loader';
+
+
+export const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
+export const passwordRegex = /^.{8,}$/;
 
 const  Login = () => {
   const [email, setEmail] = useState('');
@@ -19,12 +24,11 @@ const  Login = () => {
   
   const {login} = useLogin();
   const {showToast} = useShowToast(); 
-  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
-  const passwordRegex = /^.{8,}$/;
   
 
+  const token = Cookies.get('token');
   
-
+  
   const handleSubmit = ((e) => {
     e.preventDefault();
     if (!emailError && !passwordError)
@@ -33,7 +37,6 @@ const  Login = () => {
   
   const memoizedLogin = useCallback(() => { 
     if (rememberMeRef&& rememberMeRef.current){ 
-      // console.log(rememberMeRef.current.checked)
       login(email, password, rememberMeRef.current.checked);
     }
   }, [email, password])
@@ -90,6 +93,10 @@ const  Login = () => {
 
   const toggleShowPassword = () => { 
     setShowPassword(prev => !prev);
+  }
+
+  if (token){ 
+    return <Navigate to={"/dashboard"} replace />
   }
   
   return (

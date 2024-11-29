@@ -7,10 +7,12 @@ import sweetalert from "../utils/sweetalert";
 
 const useCategoryHook = () => {
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true)
   const Navigate = useNavigate();
 
   const getAllCategories = async (conditions) => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `${API.showCategories}${conditions}`,
         getAuthHeader()
@@ -18,7 +20,10 @@ const useCategoryHook = () => {
       setCategories(response.data.data);
       console.log(response.data);
     } catch (error) {
+      setLoading(false);
       console.log("Error fetching categories: ", error);
+    } finally { 
+      setLoading(false);
     }
   };
 
@@ -35,7 +40,7 @@ const useCategoryHook = () => {
     }
   };
 
-  return { categories, getAllCategories, deleteCategory };
+  return { categories, loading , getAllCategories, deleteCategory };
 };
 
 export default useCategoryHook;

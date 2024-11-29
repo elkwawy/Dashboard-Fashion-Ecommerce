@@ -14,13 +14,14 @@ export const API = {
   deleteUser: `${BASE_URL}/user`,
   getUser: `${BASE_URL}/user`,
   updateUser: `${BASE_URL}/user`,
+  getListOfUsers : `${BASE_URL}/user`,
+  getLoggedUser : `${BASE_URL}/user/getMe`,
   /* ======= Category ======= */
   showCategories: `${BASE_URL}/category`,
   createCategory: `${BASE_URL}/category`,
   deleteCategory: `${BASE_URL}/category`,
   getCategory: `${BASE_URL}/category`,
   updateCategory: `${BASE_URL}/category`,
-
 
   /* ======= Product ======= */
   showProducts: `${BASE_URL}/product/show`,
