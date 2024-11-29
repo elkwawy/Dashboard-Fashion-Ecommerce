@@ -14,6 +14,7 @@ export const loginUser = createAsyncThunk('user/loginUser', async ( {email, pass
         // else it stores data for 1 day
         const cookieOptions = remember ? { secure: true, sameSite: 'Strict', expires: 7 } : { secure: true, sameSite: 'Strict', expires: 1 };
         Cookies.set("token", JSON.stringify(response.data.token), cookieOptions);
+        
         return response.data;
     }
     return null ;
@@ -21,7 +22,7 @@ export const loginUser = createAsyncThunk('user/loginUser', async ( {email, pass
 
 export const getCurrentUser = createAsyncThunk('user/getCurrentUser', async (token, thunkAPI) => {
     try {
-        const response = await axios.get(`https://ecommerce-dot-code.vercel.app/api/user/getMe`, {
+        const response = await axios.get("https://ecommerce-dot-code.vercel.app/api/user/getMe", {
             headers: {
                 Authorization: token, // Ensure the token is prefixed with "Bearer"
             },
