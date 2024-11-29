@@ -49,7 +49,7 @@ const Sidebar = memo(({sidebar, closeSidebar, baseLink, subLink, lastLink}) => {
     
     
     return (
-        <div className={`${sidebar ? "z-20 w-screen max-[700px]:fixed top-0 left-0 backdrop-blur-lg min-[700px]:w-[32%] lg:w-1/4 xl:w-1/6 sm:shadow-[4px_0px_10px_0px_#B3B3B366] " : " shadow-none w-0"} py-1  min-h-screen overflow-x-hidden trans flex flex-col gap-5 `}>
+        <div className={`${sidebar ? "z-20 w-screen max-[700px]:fixed top-0 left-0 backdrop-blur-lg min-[700px]:w-[32%] lg:w-1/4 xl:w-1/6 sm:shadow-[4px_0px_10px_0px_#B3B3B366] " : " shadow-none w-0"} py-3  min-h-screen overflow-x-hidden trans flex flex-col gap-5 `}>
             {<div className={`w-full ${sidebar ? "px-3" : "p-0"} trans   border-b-2`}>
                 <button onClick={closeSidebar} className={` h-10  trans w-10 mb-3 rounded-md hover:bg-hover-color flex items-center justify-center`}>
                     <TbLayoutSidebarLeftCollapseFilled className="text-3xl" />

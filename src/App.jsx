@@ -9,12 +9,12 @@ import Loader from "./utils/Loader";
 
 import Products from './pages/Products/Products';
 import AddProduct from './pages/AddProduct/AddProduct';
-import AddUser from './pages/Users/AddUser';
 
 
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 
-
+const UsersList = React.lazy(() => import("./pages/Users/UsersList"));
+const AddUser = React.lazy(() => import("./pages/Users/AddUser"));
 
 
 const AdminList = React.lazy(() => import("./pages/admin/AdminList"));
@@ -31,6 +31,7 @@ const routes = [
   {path:'/admin/newAdmin', element:<AddNewAdmin/>},
   {path:'/products/products', element:<Products/>},
   {path:'/products/newProduct', element:<AddProduct/>},
+  {path:'/user/usersList', element:<UsersList/>},
   {path:'/user/newUser', element:<AddUser/>},
   {path:'*', element:<NotFound />},
 ];
