@@ -1,17 +1,32 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {allProduct } from '../redux/slices/productslice'
+import {allProduct, deleteProduct } from '../redux/slices/productslice'
+import { updateProduct} from '../redux/slices/addProductSlice'
 import Loader from '../utils/Loader'
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { FaEdit } from "react-icons/fa";
+import { Navigate, useNavigate } from 'react-router-dom';
+import sweetalert from '../utils/sweetalert';
+
+
 
 export default function ProductCard() {
+  const navegate = useNavigate()
    const dispatch = useDispatch()
    const {product, loading, error} = useSelector((state)=>state.productSlice)
-
 const productDetails = product.data
 
-   useEffect(()=>{
-       dispatch(allProduct())
-   },[])
+
+
+const deletedProduct=(id)=>{
+  dispatch(deleteProduct({id}))
+}
+
+
+const handelupdate = (product)=>{
+  navegate("/products/newProduct",{ state: { product } })
+
+}
 
    if(loading){
     return <>
@@ -26,12 +41,17 @@ const productDetails = product.data
   {Array.isArray(productDetails) &&   
   productDetails.map((card, index) => (
     <div key={index} className='space-y-1 '>
-      <div className=' '>
+      <div className='relative min-h-[345px] '>
         <img
-          src="https://s3-alpha-sig.figma.com/img/4a35/dd7a/42e6e08fff673065cf94613ac5eddd58?Expires=1733702400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=PDYV5rB0V4PhSotGVzEqXDSQ3uK9boaCJOZprUWIB66C2LMW2oqBKoEMec2X~CKsVwjDVWkqQDeNMXuo~qaHSWBG6shMSOI5H-TplWumgcs0t~rwYYFkqQhUx4jD8RVQcR1C4jVc0Dv6Guy8Da4vETaatWmjX-bi0YfZi1l1BxWVucszRgiyKIYrsOXxYaqwCEW4btSvZKB1isAm12QAqPDwvRGzAeE0MJ8sUNqGYCtgmRip56dAnCETjBzz79prxGGj0wCdU29o2SHW-7PRY2kgAizioAr2QqxcOLye4ifykZjGkXjRcobMhFNDgOpQBYKNijFWZHRbCUZX5FQNXg__"
+          src={card.image}
           alt={card.name}
-          className='w-full h-full min-h-[330px] lg:min-h-[300px] object-cover'
+          className='w-full h-full min-h-[340px] lg:min-h-[350px] object-cover'
         />
+        <div className='flex justify-center py-4 items-end opacity-0 hover:opacity-100 transition-all duration-300 text-white bg-black/20 w-full h-full absolute top-0 right-0 left-0'>
+          <div className='mr-6 text-3xl cursor-pointer' onClick={()=>deletedProduct(card._id)}><RiDeleteBin6Line /> </div>
+          <div className='mr-6 text-3xl cursor-pointer ' onClick={()=>handelupdate(card)}><FaEdit /></div>
+
+        </div>
       </div>
       <h2 className='line-clamp-1'>{card.name}</h2>
       <p className='font-bold'>{card.price}</p>

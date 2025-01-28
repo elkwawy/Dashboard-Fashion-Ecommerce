@@ -2,28 +2,32 @@ import { BiImageAdd } from "react-icons/bi";
 import { FaPlus } from "react-icons/fa";
 
 export default function UploadImgCard({ product, setProduct }) {
-  const handleImageChange = (e, index) => {
+  const handleMainImageChange = (e) => {
     const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setProduct((prev) => ({
+          ...prev,
+          image: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
+  const handleAdditionalImageChange = (e, index) => {
+    const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
         setProduct((prev) => {
-          const updatedProduct = { ...prev };
-          if (!updatedProduct.images) {
-            updatedProduct.images = [];
-          }
-
-          if (index === 0) {
-            updatedProduct.image = reader.result; 
-          } else if (index <= 3) {
-            updatedProduct.images[index - 1] = { url: reader.result } 
-          }
-          return updatedProduct;
+          const updatedImages = [...(prev.images || [])];
+          updatedImages[index] = reader.result; 
+          return { ...prev, images: updatedImages }; 
         });
       };
-
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); 
     }
   };
 
@@ -34,7 +38,7 @@ export default function UploadImgCard({ product, setProduct }) {
       {/* Main Photo */}
       <div className="w-full border-2 border-blue-500 rounded-lg p-2 border-dashed">
         <label
-          htmlFor="file-input-0"
+          htmlFor="main-image-input"
           className="cursor-pointer w-full h-[300px] flex items-center justify-center"
         >
           {product.image ? (
@@ -45,34 +49,34 @@ export default function UploadImgCard({ product, setProduct }) {
             />
           ) : (
             <div className="flex flex-col items-center justify-center w-full h-full">
-              <BiImageAdd className="text-6xl text-blue-500" />
-              <p className="text-blue-500">Click to upload main image</p>
+              <BiImageAdd className="text-4xl text-blue-500" />
+              <p className="text-blue-500 text-center">Click to upload main image</p>
             </div>
           )}
         </label>
         <input
-          id="file-input-0"
+          id="main-image-input"
           type="file"
           accept="image/*"
           style={{ display: "none" }}
-          onChange={(e) => handleImageChange(e, 0)}
+          onChange={handleMainImageChange}
         />
       </div>
 
       {/* Additional Images */}
-      <div className="w-full grid grid-cols-3 gap-4">
-        {Array.from({ length: 3 }).map((_, index) => (
+      <div className="w-full grid grid-cols-3 gap-4 mt-4">
+        {[0, 1, 2].map((index) => (
           <div
             key={index}
-            className="w-full h-[100px] border-2 border-blue-500 p-2 rounded-lg border-dashed relative"
+            className="relative w-full h-[100px] border-2 border-blue-500 p-2 rounded-lg border-dashed"
           >
             <label
-              htmlFor={`file-input-${index + 1}`}
+              htmlFor={`additional-image-input-${index}`}
               className="cursor-pointer w-full h-full flex items-center justify-center"
             >
               {product.images?.[index] ? (
                 <img
-                  src={product.images[index].url}
+                  src={product.images[index]?.url || product.images[index]}
                   alt={`Uploaded image ${index + 1}`}
                   className="w-full h-full object-contain rounded-lg"
                 />
@@ -81,11 +85,11 @@ export default function UploadImgCard({ product, setProduct }) {
               )}
             </label>
             <input
-              id={`file-input-${index + 1}`}
+              id={`additional-image-input-${index}`}
               type="file"
               accept="image/*"
               style={{ display: "none" }}
-              onChange={(e) => handleImageChange(e, index + 1)}
+              onChange={(e) => handleAdditionalImageChange(e, index)}
             />
           </div>
         ))}

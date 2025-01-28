@@ -47,15 +47,12 @@ const categorySlice = createSlice({
         loading: false,
         error: null,
         subCategory: [],
-        subid: '',
-       
+        subid: "",
     },
     reducers: {
         setId: (state, action) => {
             state.subid = action.payload.id;
           },
-
-       
     },
     extraReducers:(builder)=>{
         builder
@@ -80,8 +77,9 @@ const categorySlice = createSlice({
         .addCase(specificCategory.fulfilled, (state, action) => {
             state.loading = false;
             state.subCategory= action.payload;
+            state.subid = action.payload.defaultSubid;
             state.error = null; 
-
+            
         })
         .addCase(specificCategory.rejected, (state, action) => {
             state.loading = false;    

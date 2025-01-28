@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
+import Cookies from "js-cookie";
 import axios from 'axios';
+import { getAuthHeader } from "../../Auth/getAuthHeader";
+import sweetalert from "../../utils/sweetalert";
 
 export const allProduct = createAsyncThunk(
   'product/allProduct',
@@ -24,6 +26,40 @@ export const allProduct = createAsyncThunk(
     }
   }
 );
+
+ 
+
+export const deleteProduct = createAsyncThunk(
+  'product/deleteProduct',
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const token = JSON.parse(Cookies.get("token"))
+      const options = {
+        method: 'DELETE',
+        url: `https://ecommerce-dot-code.vercel.app/api/product/${id}`,
+        headers: {
+          Authorization: token ,
+        },
+        
+      };
+      const result = await sweetalert.deleteOrNot();
+      if (result.isConfirmed) {
+        const response = await axios.request(options);
+        sweetalert.deletedDone("Product deleted successfully");
+        return response.data; 
+      }
+      return rejectWithValue("Product deletion canceled");
+
+    } catch (error) {
+      console.error('Error while deleting product:', error);
+      return rejectWithValue(error.message || "An unexpected error occurred");
+    }
+  }
+);
+
+
+
+
 
 
 const productSlice = createSlice({
@@ -55,6 +91,18 @@ const productSlice = createSlice({
             state.error = null;
         })
         .addCase(allProduct.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+        })
+        .addCase(deleteProduct.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        })
+        .addCase(deleteProduct.fulfilled, (state, action) => {
+            state.loading = false;
+            state.product = state.product
+        })
+        .addCase(deleteProduct.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error;
         })

@@ -2,14 +2,35 @@ import React, { useEffect, useState } from 'react'
 import { getAlcategories, setId } from '../../../redux/slices/CategorySlice'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../../utils/Loader'
+import {  specificCategory } from '../../../redux/slices/CategorySlice'
 
 
 
 export default function GeneralInfo({ product, setProduct }) {
 const { categories,loading,error} = useSelector((state)=>state.categorySlice)
-  
-  const dispatch = useDispatch()
+  const [nameErorr,setnameErorr] = useState("")
+  const [descError,setdescError] = useState("")
+  const [selectedSizes, setSelectedSizes] = useState([])
 
+  const dispatch = useDispatch()
+ 
+
+  const nameRegex = /^.{3,}$/
+  const descRegex = /^.{10,}$/
+
+  useEffect(()=>{
+    if(product.name.trim() !== "" &&  !nameRegex.test(product.name)){
+      setnameErorr("min 3 letters")
+    }else{
+      setnameErorr("")
+    }
+
+    if(product.Desc.trim() !== ""&&!descRegex.test(product.Desc)){
+      setdescError("min 10 letters")
+    }else{
+      setdescError("")
+    }
+  },[product.name,product.Desc])
 
   const handelName = (e)=>{
     setProduct((prev)=>{
@@ -18,6 +39,7 @@ const { categories,loading,error} = useSelector((state)=>state.categorySlice)
       return updatedProduct
     })
   }
+  
 
   const handleDescription = (e)=>{
     setProduct((prev)=>{
@@ -27,13 +49,26 @@ const { categories,loading,error} = useSelector((state)=>state.categorySlice)
     })
   }
 
-  const handelSize = (e)=>{
-    setProduct((prev)=>{
-      const updatedProduct = {...prev}
-      updatedProduct.size = [...prev.size, e.target.value]
-      return updatedProduct
-    })
-  }
+  
+  const handelSize = (e) => {
+    const selectedSize = e.target.value;
+
+    setProduct((prev) => {
+      const updatedSizes = prev.size.includes(selectedSize)
+        ? prev.size.filter((size) => size !== selectedSize) 
+        : [...prev.size, selectedSize]; 
+      return {
+        ...prev,
+        size: updatedSizes,
+      };
+    });
+
+    setSelectedSizes((prev) => {
+      return prev.includes(selectedSize)
+        ? prev.filter((size) => size !== selectedSize) 
+        : [...prev, selectedSize]; 
+    });
+  };
   
  
 useEffect(()=>{
@@ -41,15 +76,22 @@ useEffect(()=>{
 },[dispatch])
 
 
-const handelCategory = (e)=>{
-  setProduct((prev)=>{
-    const updatedProduct = {...prev}
-    updatedProduct.category = e.target.value
-    dispatch(setId({id: e.target.id }))
-    return updatedProduct
-  })
-}
- 
+const handelCategory = (e) => {
+  const {id, value } = e.target;
+
+  setProduct((prev) => {
+    if (prev.category !== value) {
+      dispatch(setId({ id: id }));
+    }
+
+    return {
+      ...prev,
+      category: value,
+    };
+  });
+};
+
+
 
 
   return <> 
@@ -58,7 +100,7 @@ const handelCategory = (e)=>{
     <div className='space-y-3'>
         {/* name */}
        <div className='flex flex-col items-start justify-between space-y-2 '>
-       <label htmlFor="name">Name Product</label>
+       <label htmlFor="name" className='flex items-center justify-between w-full'><span className=' '>Product Name</span>{nameErorr &&<span className='text-nowrap bg-red-200 text-red-600 text-sm px-2 rounded'>{nameErorr}</span>}</label>
       <input
         type="text"
         id="name"
@@ -74,86 +116,91 @@ const handelCategory = (e)=>{
        </div>
 {/* description */}
        <div className='flex flex-col items-start justify-center space-y-2'>
-       <label htmlFor=''>Description Product</label>
-      <textarea id='description' name='description' placeholder='Enter description Product...' className='w-full h-32 p-2 border border-gray-300 rounded ' onChange={handleDescription}></textarea>
+       <label htmlFor='' className='flex items-center justify-between w-full'><span>Product Description</span> {descError && <span className='text-sm bg-red-200 text-red-600 px-2 rounded'>{descError}</span>}</label>
+      <textarea id='description' name='description' value={product.Desc} placeholder='Enter description Product...' className='w-full h-32 p-2 border border-gray-300 rounded ' onChange={handleDescription}></textarea>
        </div>
 {/* size general */}
-<div className='space-y-2 lg:flex items-start justify-between gap-4'>
+
     {/* size */}
-<div className='space-y-2 w-1/2'>
-<h3 className='font-semibold'>Size</h3>
-<p className='text-gray-500 text-nowrap'>Pick Available Size</p>
-<div/>
-<div className='flex items-center md:flex-wrap flex-wrap gap-2'>
-{/* size box */}
-<div className='py-2 px-2  text-xl rounded text-center w-[42px]'>
-<label htmlFor='xs' className=''><input type='checkbox'  name='xs' id='xs'  className='hidden peer'  onChange={handelSize} value={"xs"}/>
-<div className='py-2 px-2 text-xl bg-gray-200 w-[40px] rounded  flex-col items-center justify-center peer-checked:bg-blue-500  peer-checked:text-white'>XS</div>
-</label>
-</div>
-{/* size box2 */}
-<div className='peer py-2 px-2 cursor-pointer text-xl rounded text-center w-[42px]'>
-<label htmlFor='s' className=''><input type='checkbox'  name='s' id='s'  className='hidden peer'  onChange={handelSize} value={"s"}/>
-<div className='py-2 px-2 text-xl bg-gray-200 w-[40px] rounded  flex-col items-center justify-center peer-checked:bg-blue-500  peer-checked:text-white'>S</div>
-</label>
-</div>
 
- {/* size box3 */} 
-<div className=' peer py-2 px-2 cursor-pointer text-xl rounded text-center w-[42px]'>
-<label htmlFor='m' className=''><input type='checkbox'  name='m' id='m'  className='hidden peer' onChange={handelSize} value={"m"} />
-<div className='py-2 px-2 text-xl bg-gray-200 w-[40px] rounded  flex-col items-center justify-center peer-checked:bg-blue-500  peer-checked:text-white'>M</div>
-</label>
-</div>
-
-<div className=' peer py-2 px-2 cursor-pointer text-xl rounded text-center w-[42px]'>
-<label htmlFor='L' className=''><input type='checkbox'  name='L' id='L'  className='hidden peer' onChange={handelSize} value={"L"}/>
-<div className='py-2 px-2 text-xl bg-gray-200 w-[40px] rounded  flex-col items-center justify-center peer-checked:bg-blue-500  peer-checked:text-white'>L</div>
-</label>
-</div>
-
-<div className=' peer py-2 px-2 cursor-pointer text-xl rounded text-center w-[42px]'>
-<label htmlFor='XL' className=''><input type='checkbox'  name='XL' id='XL'  className='hidden peer' onChange={handelSize} value={"XL"}/>
-<div className='py-2 px-2 text-xl bg-gray-200 w-[40px] rounded  flex-col items-center justify-center peer-checked:bg-blue-500  peer-checked:text-white'>XL</div>
-</label>
-</div>
-
-<div className=' peer py-2 px-2 cursor-pointer text-xl rounded text-center  w-[42px]'>
-<label htmlFor='XXL' className=''><input type='checkbox'  name='XXL' id='XXL'  className='hidden peer' onChange={handelSize} value={"XXL"} />
-<div className='py-2 px-2 text-xl bg-gray-200 w-[40px] rounded flex flex-col items-center justify-center peer-checked:bg-blue-500  peer-checked:text-white'>XXL</div>
-</label>
-</div>
-
-</div>
-
-</div>
-
-
-{/*Category */}
-
-<div className='space-y-2 w-1/2'>
-<h3 className='font-semibold'>Category</h3>
-<p className='text-gray-500 text-nowrap'>Pick Available Category</p>
-<div className='flex items-center lg:flex-wrap max-[349px]:flex-wrap justify-between'>
-    {categories? categories.map((category,id) => (<div  className=' ' key={category._id}>
-    <label htmlFor={category._id}  className="flex items-center space-x-reverse space-x-2">
-  <input
-    type="radio"
-    id={category._id}
-    name="category"
-    value={category._id}
-    className="peer hidden"
-    onChange={handelCategory}
-  />
-  <div className="w-[20px] h-[20px] border border-gray-400 rounded-full flex items-center justify-center peer-checked:border-blue-500">
-    <div className="w-[10px] h-[10px] rounded-full border border-gray-400 bg-white peer-checked:bg-blue-500 "></div>
+    <div className="flex flex-wrap  gap-x-4">
+  {/* Size Section */}
+  <div className="space-y-2 ">
+    <h3 className="font-semibold">Size</h3>
+    <p className="text-gray-500 text-nowrap">Pick Available Size</p>
+    <div className="flex items-center md:flex-wrap flex-wrap gap-2">
+      <div className="flex items-center max-[1290px]:flex-wrap gap-2">
+        {["S", "M", "L", "XL", "XXL"].map((size, index) => (
+          <div
+            key={index}
+            className="peer py-2 px-2 cursor-pointer text-xl rounded text-center max-w-[55px]"
+          >
+            <label
+              htmlFor={`size-${index}`}
+              className="flex items-center justify-center"
+            >
+              <input
+                type="checkbox"
+                name="size"
+                id={`size-${index}`}
+                className="hidden peer"
+                onChange={handelSize}
+                value={size}
+                checked={product.size.includes(size)}
+              />
+              <div
+                className={`py-2 px-2 text-xl w-[40px] rounded flex items-center justify-center ${
+                  selectedSizes.includes(size)
+                    ? "bg-gray-200 text-gray-700"
+                    : "bg-blue-500 text-white"
+                }`}
+              >
+                {size}
+              </div>
+            </label>
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
-  <span>{category.name}</span>
-</label>
-    </div>)):<div className='flex items-center justify-center w-full h-full'> <Loader/> </div>}
-   
+
+  {/* Category Section */}
+  <div className="space-y-2">
+    <h3 className="font-semibold">Category</h3>
+    <p className="text-gray-500 text-nowrap">Pick Available Category</p>
+    <div className="flex items-center   py-4 max-[950px]:py-0 lg:flex-wrap max-[372px]:flex-wrap justify-between">
+      {categories ? (
+        categories.map((category) => (
+          <div className=" " key={category._id}>
+            <label
+              htmlFor={category._id}
+              className="flex items-center space-x-reverse space-x-2"
+            >
+              <input
+                type="radio"
+                id={category._id}
+                name="category"
+                value={category._id }
+                checked={product.category === category._id}
+                className="peer hidden"
+                onChange={handelCategory}
+              />
+              <div className="w-[20px] h-[20px] border border-gray-400 rounded-full flex items-center justify-center peer-checked:border-blue-500">
+                <div className="w-[10px] h-[10px] rounded-full border border-gray-400 bg-white peer-checked:bg-blue-500"></div>
+              </div>
+              <span>{category.name}</span>
+            </label>
+          </div>
+        ))
+      ) : (
+        <div className="flex items-center justify-center w-full h-full">
+          <Loader />
+        </div>
+      )}
+    </div>
+  </div>
 </div>
-</div>
-</div>
+
     </div>
    
   </form>
