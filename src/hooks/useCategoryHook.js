@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { API } from "../Api/Api";
 import { getAuthHeader } from "../Auth/getAuthHeader";
@@ -6,19 +6,24 @@ import { useNavigate } from "react-router-dom";
 import sweetalert from "../utils/sweetalert";
 
 const useCategoryHook = () => {
-  const [allCategories, setAllCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true)
   const Navigate = useNavigate();
 
   const getAllCategories = async (conditions) => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `${API.showCategories}${conditions}`,
         getAuthHeader()
       );
-      setAllCategories(response.data.data);
+      setCategories(response.data.data);
       console.log(response.data);
     } catch (error) {
+      setLoading(false);
       console.log("Error fetching categories: ", error);
+    } finally { 
+      setLoading(false);
     }
   };
 
@@ -35,10 +40,7 @@ const useCategoryHook = () => {
     }
   };
 
-  useEffect(() => {
-    getAllCategories("?limit=8");
-  },[])
-  return { allCategories, getAllCategories, deleteCategory };
+  return { categories, loading , getAllCategories, deleteCategory };
 };
 
 export default useCategoryHook;
