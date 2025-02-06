@@ -1,14 +1,11 @@
-import Cookies from 'js-cookie';
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense } from "react";
 import { Toaster } from "react-hot-toast";
-import { useDispatch } from 'react-redux';
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
 import RootLayout from "./pages/RootLayout";
-import { getCurrentUser } from './redux/slices/userSlice';
 import Loader from "./utils/Loader";
 
-import Products from './pages/Products/Products';
 import AddProduct from './pages/AddProduct/AddProduct';
+import Products from './pages/Products/Products';
 
 
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
@@ -52,21 +49,8 @@ const Router = createBrowserRouter(
 )
 
 const App = () => {
-
-  const dispatch = useDispatch();
-  // if the user reload his data isn't removed
-  useEffect(() => {
-    const userToken = Cookies.get('token');
-    
-    if (userToken) {
-      dispatch(getCurrentUser(JSON.parse(userToken)));
-    }
-  }, [dispatch]);
-
-  
-  
   return (
-    <Suspense fallback={<div className="w-full h-[calc(100vh-82px)] translate-y-[82px] flex items-center justify-center"><Loader /></div>}>
+    <Suspense fallback={<div className="w-full h-[100vh]  flex items-center justify-center"><Loader /></div>}>
       
         <RouterProvider router={Router} />
       
