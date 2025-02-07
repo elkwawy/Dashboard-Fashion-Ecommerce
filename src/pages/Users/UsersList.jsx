@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { FaPlus } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
@@ -11,16 +11,26 @@ import useUserHook from "../../hooks/useUserHook";
 export default function UsersList() {
   const { getAllUsers, users, totalUsers, deleteUser, runUseEffect } =
     useUserHook();
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 6; 
+  const usersPerPage = 6;
   const [searchTerm, setSearchTerm] = useState("");
   useEffect(() => {
     getAllUsers(
-      `?role=user&limit=${usersPerPage}&sort=-createdAt&page=${currentPage}&search=${searchTerm}`
+      `?role=user&limit=${usersPerPage}&sort=-createdAt&page=${currentPage}&search=${searchTerm}`,
+      setLoading
     );
   }, [currentPage, runUseEffect, searchTerm]);
 
   const totalPages = Math.ceil(totalUsers / usersPerPage);
+
+  const navigate = useNavigate();
+
+  const handelUpdate = (user) => {
+    navigate(`/user/updateUser/${user._id}`, {
+      state: { user },
+    });
+  };
 
   return (
     <section className="-mt-5">
@@ -70,7 +80,15 @@ export default function UsersList() {
                   </tr>
                 </thead>
                 <tbody className="divide-y relative divide-gray-[#D5D5D5]">
-                  {users.length > 0 ? (
+                  {loading && !searchTerm ? (
+                    <tr className="relative h-[325px]">
+                      <td colSpan="4" className="relative">
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                          <Loader />
+                        </div>
+                      </td>
+                    </tr>
+                  ) : users.length > 0 ? (
                     users.map((user, index) => (
                       <tr key={user._id}>
                         <td className="px-4 py-3 text-sm font-medium text-black whitespace-nowrap">
@@ -84,12 +102,12 @@ export default function UsersList() {
                         </td>
                         <td className="px-4 py-3 text-sm whitespace-nowrap">
                           <div className="flex items-center w-fit border border-[#D5D5D5] rounded-md overflow-hidden">
-                            <Link
-                              to={`/user/updateUser/${user._id}`}
+                            <button
+                              onClick={() => handelUpdate(user)}
                               className="transition-colors bg-[#FAFBFD] py-1 px-2 border-r border-[#D5D5D5] duration-200 text-main-color focus:outline-none flex items-center justify-center"
                             >
                               <FaEdit className="w-5 h-5" />
-                            </Link>
+                            </button>
                             <button
                               className="transition-colors bg-[#FAFBFD] py-1 px-2 duration-200 text-red-500 focus:outline-none flex items-center justify-center"
                               onClick={() => deleteUser(user._id)}

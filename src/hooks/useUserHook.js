@@ -4,12 +4,14 @@ import { API } from "../Api/Api";
 import { getAuthHeader } from "../Auth/getAuthHeader";
 import { useNavigate } from "react-router-dom";
 import sweetalert from "../utils/sweetalert";
+import { showToast } from "../utils/showToast";
 const useUserHook = () => {
   const [users, setUsers] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const Navigate = useNavigate();
 
-  const getAllUsers = async (conditions) => {
+  const getAllUsers = async (conditions, setLoading) => {
+    setLoading(true);
     try {
       const response = await axios.get(
         `${API.showUsers}${conditions}`,
@@ -20,6 +22,8 @@ const useUserHook = () => {
       //   console.log(response.data);
     } catch (error) {
       console.log("Error fetching users: ", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -30,7 +34,7 @@ const useUserHook = () => {
       try {
         await axios.delete(`${API.deleteUser}/${id}`, getAuthHeader());
         setRunUseEffect(runUseEffect + 1);
-        sweetalert.deletedDone("user");
+        showToast("success", "User deleted successfully");
       } catch (error) {
         console.log("Error => " + error);
         sweetalert.deletedError();
@@ -84,9 +88,6 @@ const useUserHook = () => {
       Navigate("/user/usersList");
     } catch (error) {
       console.log("Error : ", error);
-      if (error.response.status === 422 || error.response.status === 400) {
-        setEmailError("The email has already been taken");
-      }
     } finally {
       setLoading(false);
     }
