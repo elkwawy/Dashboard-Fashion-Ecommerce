@@ -1,14 +1,13 @@
-import { IoMdAdd } from "react-icons/io";
-import { IoIosSearch } from "react-icons/io";
-import { FaRegEdit } from "react-icons/fa";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { FaAngleRight } from "react-icons/fa6";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteAdmin, getAdmins } from "../../redux/slices/adminsSlice";
 import Cookies from "js-cookie";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { CiSearch } from "react-icons/ci";
+import { FaRegEdit } from "react-icons/fa";
+import { FaAngleRight, FaPlus } from "react-icons/fa6";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useSearchParams } from "react-router-dom";
+import { deleteAdmin, getAdmins } from "../../redux/slices/adminsSlice";
 import Loader from "../../utils/Loader";
-import { Link, useSearchParams } from "react-router-dom";
 import DeleteModal from "./DeleteModal";
 import UpdateModal from "./UpdateModal";
 
@@ -82,8 +81,6 @@ const AdminList = () => {
         closeUpdateModal();
     };
 
-    if (!isUpdateModalOpen && status == 'loading') 
-        return <div className="w-full h-full flex items-center justify-center "><Loader /></div>;
     if (!isUpdateModalOpen && status == 'failed') 
         return <div className="w-full h-full flex items-center justify-center font-bold text-xl">{error}</div>;
 
@@ -92,20 +89,26 @@ const AdminList = () => {
     return (
         <>
             <div className="bg-white p-3 sm:p-5 h-fit  max-w-full overflow-x-auto flex flex-col gap-5  rounded-md">
-                <div className="flex justify-between max-[450px]:flex-col max-[450px]:gap-5 items-center">
-                    {/* Search */}
-                    <div className="relative w-full min-[450px]:w-1/2 sm:w-1/3 group">
-                        <input
-                            type="text"
-                            className="p-1.5 border-gray-400 rounded-sm placeholder:text-gray-400 border-[1px] w-full outline-1 trans outline-main-color"
-                            placeholder="Search here..."
-                        />
-                        <IoIosSearch className="absolute top-1/2 -translate-y-1/2 right-2 text-xl text-gray-400 trans group-focus-within:text-black" />
+                <div className="md:flex space-y-4 md:space-y-0 items-center justify-between bg-white">
+                    {/* search input */}
+                    <div className="relative md:w-[300px] lg:w-[450px] w-full mr-4">
+                    <input
+                        type="text"
+                        placeholder="Search here..."
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full p-2 border border-[#B3B3B3] transition focus:outline-main-color rounded"
+                    />
+                    <CiSearch className="absolute top-2.5 right-3 text-[#B3B3B3] text-xl" />
                     </div>
-                    <Link to={'/admin/newAdmin'} className="px-3 py-1 gap-1 w-fit rounded-sm bg-main-color trans hover:bg-blue-600 text-white flex items-center">
-                        <IoMdAdd className="text-lg mt-0.5" />
-                        Add New
-                    </Link>
+                    {/* add user */}
+                    <div className="w-full md:w-[159px] rounded bg-main-color py-[9px] flex items-center justify-center">
+                    <NavLink
+                        to={"/admin/newAdmin"}
+                        className="w-full text-center px-4 text-white"
+                    >
+                        <FaPlus className="inline-flex mr-2" /> Add Admin
+                    </NavLink>
+                    </div>
                 </div>
                 {<div className="relative max-sm:w-[200%] sm:max-w-[100%] min-h-[412px]">
                     <div className="w-full ">
@@ -128,6 +131,14 @@ const AdminList = () => {
                             </thead>
                             <tbody>
                                 {
+                                    status == "loading" ? 
+                                    <tr className="relative h-[325px]">
+                                    <td colSpan="4" className="relative">
+                                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                        <Loader />
+                                        </div>
+                                    </td>
+                                    </tr> : 
                                     admins.map(admin => (
                                         <tr key={`${admin._id}${admin.name}`} className="bg-white border-b hover:bg-gray-50 trans">
                                             <th scope="row" className="px-2 lg:px-6 py-2 flex items-center gap-1.5 font-medium whitespace-nowrap overflow-hidden text-ellipsis">
@@ -154,6 +165,8 @@ const AdminList = () => {
                                     ))
                                 }
                             </tbody>
+
+
                         </table>
                     </div>
                 </div>}

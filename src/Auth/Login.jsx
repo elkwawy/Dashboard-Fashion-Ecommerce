@@ -141,7 +141,7 @@ const  Login = () => {
                 className={`w-full relative p-2 outline-1 border-2 rounded-md bg-gray-50 ${passwordError ? "outline-red-400 border-red-400" : "focus:outline-main-color"} `}
                 
               />
-              {password.length > 0 &&<button type='button' onClick={toggleShowPassword} className=' absolute top-1/2 -translate-y-1/2 right-2 '>
+              {password.length > 0 &&<button type='button' onClick={toggleShowPassword} className=' absolute bg-gray-50 pl-5 top-1/2 -translate-y-1/2 right-2 '>
                 {showPassword && <LuEyeOff />}
                 {!showPassword && <LuEye />}
               </button>}

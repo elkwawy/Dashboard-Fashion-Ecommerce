@@ -12,13 +12,11 @@ export const phoneRegex = /^\d{11}$/;
 const AddNewAdmin = () => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
-    const [phoneNumber, setPhoneNumber] = useState('')
     const [password, setPassword] = useState('')
     const [passwordConfirm, setPasswordConfirm] = useState('')
 
     const [nameError, setNameError] = useState('')
     const [emailError, setEmailError] = useState('')
-    const [phoneNumberError, setPhoneNumberError] = useState('')
     const [passwordError, setPasswordError] = useState('')
     const [passwordConfirmError, setPasswordConfirmError] = useState('');
 
@@ -38,10 +36,7 @@ const AddNewAdmin = () => {
     const handleEmailChange = (e) => { 
         setEmail(e.target.value)
     }
-
-    const handlePhoneNumberChange = (e) => { 
-        setPhoneNumber(e.target.value)
-    }
+    
 
     const handlePasswordChange = (e) => { 
         setPassword(e.target.value)
@@ -71,16 +66,7 @@ const AddNewAdmin = () => {
         } else {
             setEmailError("");
         }
-
-        if (!phoneNumber) {
-            setPhoneNumberError("Phone number is required");
-            isValid = false;
-        } else if (!phoneNumber.match(phoneRegex)) {
-            setPhoneNumberError("Phone number must be 11 digits");
-            isValid = false;
-        } else {
-            setPhoneNumberError("");
-        }
+        
 
         if (!password) {
             setPasswordError("Password is required");
@@ -183,35 +169,28 @@ const AddNewAdmin = () => {
                             <span className="select-none cursor-pointer">Name *</span>
                             {nameError && <div className="bg-red-100 text-red-500 px-2 sm:px-4 rounded-sm py-1 text-xs sm:text-sm">{nameError}</div>}
                         </div>
-                        <input value={name} onChange={handleNameChange} type="text" placeholder="Username" className={`border-2 ${nameError ? "border-red-500" : ""} p-2 rounded-sm trans focus-within:outline-main-color outline-1`} />
+                        <input value={name} onChange={handleNameChange} type="text" placeholder="Username" className={`border-2 ${nameError ? "border-red-500" : "focus:border-main-color"} p-2 rounded-sm trans outline-0 `} />
                     </label>
                     <label className="flex flex-col gap-2">
                         <div className="flex  justify-between">
                             <span className="select-none cursor-pointer">Email *</span>
                             {emailError && <div className="bg-red-100 text-red-500 px-2 sm:px-4 rounded-sm py-1 text-xs sm:text-sm">{emailError}</div>}
                         </div>
-                        <input value={email} type="text" onChange={handleEmailChange} placeholder="Email address" className={`border-2 ${emailError ? "border-red-500" : ""} p-2 rounded-sm trans focus-within:outline-main-color outline-1`} />
-                    </label>
-                    <label className="flex flex-col gap-2">
-                        <div className="flex  justify-between">
-                            <span className="select-none cursor-pointer">Phone number *</span>
-                            {phoneNumberError && <div className="bg-red-100 text-red-500 px-2 sm:px-4 rounded-sm py-1 text-xs sm:text-sm">{phoneNumberError}</div>}
-                        </div>
-                        <input value={phoneNumber} type="text" onChange={handlePhoneNumberChange} placeholder="Phone number" className={`border-2 ${phoneNumberError ? "border-red-500" : ""} p-2 rounded-sm trans focus-within:outline-main-color outline-1`} />
+                        <input value={email} type="text" onChange={handleEmailChange} placeholder="Email address" className={`border-2 ${emailError ? "border-red-500" : "focus:border-main-color"} p-2 rounded-sm trans outline-0 `} />
                     </label>
                     <label className="flex flex-col gap-2">
                         <div className="flex  justify-between">
                             <span className="select-none cursor-pointer">Password *</span>
                             {passwordError && <div className="bg-red-100 text-red-500 px-2 sm:px-4 rounded-sm py-1 text-xs sm:text-sm">{passwordError}</div>}
                         </div>
-                        <input value={password} type="password" onChange={handlePasswordChange} placeholder="Password" className={`border-2 ${passwordError ? "border-red-500" : ""} p-2 rounded-sm trans focus-within:outline-main-color outline-1`} />
+                        <input value={password} type="password" onChange={handlePasswordChange} placeholder="Password" className={`border-2 ${passwordError ? "border-red-500" : "focus:border-main-color"} p-2 rounded-sm trans outline-0 `} />
                     </label>
                     <label className="flex flex-col gap-2">
                         <div className="flex  justify-between">
                             <span className="select-none cursor-pointer">Confirm password *</span>
                             {passwordConfirmError && <div className="bg-red-100 text-red-500 px-2 sm:px-4 rounded-sm py-1 text-xs sm:text-sm">{passwordConfirmError}</div>}
                         </div>
-                        <input value={passwordConfirm} type="password" onChange={handlePasswordConfirmChange} placeholder="Confirm Password" className={`border-2 ${passwordConfirmError ? "border-red-500" : ""} p-2 rounded-sm trans focus-within:outline-main-color outline-1`} />
+                        <input value={passwordConfirm} type="password" onChange={handlePasswordConfirmChange} placeholder="Confirm Password" className={`border-2 ${passwordConfirmError ? "border-red-500" : "focus:border-main-color"} p-2 rounded-sm trans outline-0 `} />
                     </label>
                 </div>
             </div>

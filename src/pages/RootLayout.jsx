@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { memo, Suspense, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -9,7 +9,7 @@ import Loader from '../utils/Loader';
 const Sidebar = React.lazy(() => import('../components/sidebar/Sidebar'));
 const PathTracker = React.lazy(() => import('../components/sidebar/PathTracker'));
 
-const RootLayout = () => {
+const RootLayout = memo((auth) => {
     
     //                 sidebar open in large screens and close in small screens
     const [sidebar, setSidebar] = useState(window.innerWidth > 700);
@@ -21,13 +21,13 @@ const RootLayout = () => {
 
     // Fetch user data on initial load if a token exists
     useEffect(() => {
-        if (userToken) {
+        if (auth) {
             dispatch(getCurrentUser(JSON.parse(userToken)));
         }
-    }, [dispatch, userToken]);
+    }, [dispatch, auth]);
 
     // Handle authentication
-    if (!userToken) {
+    if (!auth) {
         return <Navigate to="/" replace />;
     }
 
@@ -68,6 +68,6 @@ const RootLayout = () => {
             </div>
         </div>
     );
-};
+});
 
 export default RootLayout;

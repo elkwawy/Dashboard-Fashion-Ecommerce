@@ -3,7 +3,7 @@ import { Toaster } from "react-hot-toast";
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
 import RootLayout from "./pages/RootLayout";
 import Loader from "./utils/Loader";
-
+import Cookies from "js-cookie";
 import AddProduct from './pages/AddProduct/AddProduct';
 import Products from './pages/Products/Products';
 
@@ -36,13 +36,13 @@ const routes = [
   {path:'*', element:<NotFound />},
 ];
 
-
+const auth = Cookies.get(`token`);
 
 const Router = createBrowserRouter(
   createRoutesFromElements(
       <>
         <Route path="/" element={<Login />} />
-        {<Route  element={<RootLayout />}>
+        {<Route  element={<RootLayout auth={auth} />}>
               {
                 routes.map((route) => <Route key={route.path} path={route.path} element={route.element} />)
               }

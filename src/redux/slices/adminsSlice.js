@@ -3,11 +3,14 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { API } from "./../../Api/Api";
 import { getAuthHeader } from "./../../Auth/getAuthHeader";
+import { showToast } from "../../utils/showToast";
 const { headers } = getAuthHeader() ? getAuthHeader() : {};
 
 export const getAdmins = createAsyncThunk(
   "admins/getAdmins",
   async ({ page, token }, { rejectWithValue }) => {
+    console.log(page);
+    
     try {
       const response = await axios.get(API.getListOfUsers, {
         params: {
@@ -173,20 +176,28 @@ const adminsSlice = createSlice({
           state.error = "An unexpected error occurred. Please try again later.";
         }
       })
-      .addCase(deleteAdmin.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
+      .addCase(deleteAdmin.pending, (state, action) => {
+        // Optimistically remove the admin before the API request completes
+        const { id } = action.meta.arg;
+        state.admins = state.admins.filter((admin) => admin._id !== id);
+        state.totalAdmins -= 1;
       })
       .addCase(deleteAdmin.fulfilled, (state, action) => {
-        state.admins = state.admins.filter(
-          (admin) => admin._id !== action.payload
-        );
-        state.totalAdmins -= 1;
+        // If the API call succeeds, do nothing (since we already removed it)
         state.status = "succeeded";
+        showToast("success", "Admin was deleted successfully")
       })
       .addCase(deleteAdmin.rejected, (state, action) => {
+        // If the API call fails, restore the previous state
         state.status = "failed";
-        state.error = action.payload || "An unexpected error occurred.";
+        state.error = action.payload;
+        showToast("error", "Failed to delete admin")
+
+        // Revert the deletion by re-adding the admin (re-fetching would be ideal)
+        if (action.meta.arg) {
+          state.admins.push(action.meta.arg);
+          state.totalAdmins += 1;
+        }
       })
       .addCase(addNewAdmin.pending, (state) => {
         state.status = "loading";
