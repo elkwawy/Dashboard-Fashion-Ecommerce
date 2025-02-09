@@ -19,8 +19,12 @@ const navigate = useNavigate()
     console.log("🛠 ID from useParams:", id);
     if (id) {
       dispatch(specificSpicificCategory({ id }));
+      console.log("��� Specific category:", categories[0]);
     }
   }, [dispatch, id]);
+
+  console.log(categories);
+  
 
   
   useEffect(() => {

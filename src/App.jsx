@@ -1,13 +1,9 @@
-import Cookies from 'js-cookie';
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense } from "react";
 import { Toaster } from "react-hot-toast";
-import { useDispatch } from 'react-redux';
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
 import RootLayout from "./pages/RootLayout";
-import { getCurrentUser } from './redux/slices/userSlice';
 import Loader from "./utils/Loader";
 
-import Products from './pages/Products/Products';
 import AddProduct from './pages/AddProduct/AddProduct';
 import SubCategory from './pages/SubCategory/SubCategory';
 import UpdateSubCat from './pages/SubCategory/UpdateSubCat';
@@ -15,19 +11,21 @@ import AddNewSub from './pages/SubCategory/AddNewSub';
 import AllCategory from './pages/Categories/AllCategory';
 import UpdateCategory from './pages/Categories/UpdateCategory';
 import AddNewCategory from './pages/Categories/AddNewCategory';
+import Products from './pages/Products/Products';
 
 
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 
 const UsersList = React.lazy(() => import("./pages/Users/UsersList"));
 const AddUser = React.lazy(() => import("./pages/Users/AddUser"));
-
+const UpdataUser = React.lazy(() => import("./pages/Users/UpdateUser"));
+const AddCategory = React.lazy(() => import("./pages/Categories/AddCategory"));
 
 const AdminList = React.lazy(() => import("./pages/admin/AdminList"));
 const AddNewAdmin = React.lazy(() => import("./pages/admin/AddNewAdmin"));
+
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 const Login = React.lazy(() => import("./Auth/Login"));
-
 
 
 // add routes here
@@ -44,7 +42,9 @@ const routes = [
   {path:`/subcat/updatsubact/:id`,element:<UpdateSubCat/>},
   {path:'/subcat/AddNewsubact/:id',element:<AddNewSub/>},
   {path:'/user/usersList', element:<UsersList/>},
+  {path:'/user/updateUser/:id', element:<UpdataUser/>},
   {path:'/user/newUser', element:<AddUser/>},
+  {path:'/categories/addCategory', element:<AddCategory/>},
   {path:'*', element:<NotFound />},
 ];
 
@@ -64,21 +64,8 @@ const Router = createBrowserRouter(
 )
 
 const App = () => {
-
-  const dispatch = useDispatch();
-  // if the user reload his data isn't removed
-  useEffect(() => {
-    const userToken = Cookies.get('token');
-    
-    if (userToken) {
-      dispatch(getCurrentUser(JSON.parse(userToken)));
-    }
-  }, [dispatch]);
-
-  
-  
   return (
-    <Suspense fallback={<div className="w-full h-[calc(100vh-82px)] translate-y-[82px] flex items-center justify-center"><Loader /></div>}>
+    <Suspense fallback={<div className="w-full h-[100vh]  flex items-center justify-center"><Loader /></div>}>
       
         <RouterProvider router={Router} />
       

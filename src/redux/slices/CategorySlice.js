@@ -12,6 +12,7 @@ export const getAlcategories = createAsyncThunk(
         const response = await axios.get(`${API.showCategories}`, {
           params: { limit }, 
         });
+        
         return response.data.data;
       } catch (error) {
         console.error(" Error fetching categories:", error.response?.data?.message);
@@ -47,7 +48,7 @@ export const specificSpicificCategory = createAsyncThunk(
     async({id})=>{
      const options ={
          method: 'GET',
-         url: `${API.showCategories}/category/${id}`,
+         url: `${API.showCategories}/${id}`,
      }
      try{
          const response = await axios.request(options)

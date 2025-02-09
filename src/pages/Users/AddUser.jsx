@@ -1,55 +1,116 @@
-import React, { useState } from 'react'
-import { FaEye, FaEyeSlash } from 'react-icons/fa6'
-
+import { useEffect, useState } from "react";
+import InputField from "../../components/Form/InputField";
+import PasswordField from "../../components/Form/PasswordField";
+import SubmitButton from "../../components/Form/SubmitButton";
+import useUserHook from "../../hooks/useUserHook";
+import addImg from "../../assets/avater/update1.svg";
 export default function AddUser() {
-   const [passType, setPassType]= useState("password")
-   const [confirmpassType, setconfirmPassType]= useState("password")
-   const togglePassType = () => {
-      setPassType(passType === "password" ? "text" : "password")
-   }
+  const { addNewUser } = useUserHook();
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+    role: "user",
+  });
+  const handleFormChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-   const toggleconfirmPassType = () => {
-    setconfirmPassType(confirmpassType === "password" ? "text" : "password")
- }
+  const [loading, setLoading] = useState(false);
+  const [accept, setAccept] = useState(false);
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const [emailError, setEmailError] = useState("");
 
-  return<>
-  <section>
-    <div className='container py-4 '>
-      <h3 className='text-2xl font-semibold'>Add New User</h3>
-      <div className='bg-white rounded-xl px-4 pt-4 pb-14 my-4 space-y-2'>
-        <h2 className='text-xl font-semibold '>Account</h2>
-        <div className='grid grid-cols-12 gap-4 '>
-        <div className='col-span-12 md:col-span-12 lg:col-span-5'>
-            <p className='text-gray-500 text-lg '>Fill in the information below to add a new account</p>
-        </div>
-        <form className='space-y-4 col-span-12 md:col-span-12 lg:col-span-7'>
-        <div className='space-y-2'>
-        <label htmlFor="name" className='font-semibold text-xl'>Name</label>
-        <input type="text" id="name" name="name" placeholder='User Name' required className="w-full p-2 border border-gray-300 rounded" />
-        </div>
-        <div className='space-y-2'>
-        <label htmlFor="email"  className='font-semibold text-xl'>Email</label>
-        <input type="email" id="email" name="email" placeholder='email' required className="w-full p-2 border border-gray-300 rounded" />
-        </div>
-        <div className='space-y-2'>
-        <label htmlFor="password" className='font-semibold text-xl'>Password</label>
-        <div className='relative'>
-        <input type={passType} id="password" name="password" placeholder='password' required className="w-full p-2 border border-gray-300 rounded" />
-        {passType === "password"? <FaEye onClick={togglePassType} className='absolute top-3 right-3'/>:<FaEyeSlash onClick={togglePassType} className='absolute top-3 right-3'/>}
-        </div>
-        </div>
-        <div className='space-y-2'>
-        <label htmlFor="conformpassword" className='font-semibold text-xl'>confirm password</label>
-        <div className='relative'>
-        <input type={confirmpassType} id="confirmPassword" name="confirmpassword" placeholder='confirm Password' required className="w-full p-2 border border-gray-300 rounded" />
-        {confirmpassType === "password"? <FaEye onClick={toggleconfirmPassType} className='absolute top-3 right-3'/>:<FaEyeSlash onClick={toggleconfirmPassType} className='absolute top-3 right-3'/>}
+  useEffect(() => {
+    emailRegex.test(form.email)
+      ? setEmailError("")
+      : setEmailError("Invalid email address");
+  }, [form.email]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setAccept(true);
+
+    if (
+      form.password !== form.passwordConfirm ||
+      form.password?.length < 8 ||
+      form.name?.length < 1 ||
+      !emailRegex.test(form.email)
+    ) {
+      setLoading(false);
+      return;
+    }
+
+    addNewUser(form, setLoading);
+  };
+  return (
+    <section>
+      <div className="bg-white rounded-xl p-6 space-y-4">
+        <div className="">
+          <h2 className="text-xl font-semibold mb-2">Create New User</h2>
+          <p className="text-gray-500 text-lg">
+            Fill in the information below to add a new user
+          </p>
         </div>
 
-        </div>
-        </form>
+        <div className="flex justify-between gap-8">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-5 w-full lg:w-[45%] max-md:w-full"
+          >
+            <InputField
+              type="text"
+              name="name"
+              label="Name"
+              value={form.name}
+              placeholder="Enter your name"
+              onChange={handleFormChange}
+              errorValidation={accept && form.name.length < 1}
+              errorMessage="Name is required"
+            />
+            <InputField
+              type="email"
+              name="email"
+              label="Email"
+              value={form.email}
+              placeholder="Enter your email address"
+              onChange={handleFormChange}
+              errorValidation={accept && emailError.length > 0}
+              errorMessage={emailError}
+            />
+            <PasswordField
+              name="password"
+              value={form.password}
+              label="Password"
+              placeholder="Enter a strong password"
+              onChange={handleFormChange}
+              errorValidation={accept && form.password.length < 8}
+              errorMessage="Password must be more than 8 char"
+            />
+            <PasswordField
+              name="passwordConfirm"
+              value={form.passwordConfirm}
+              label="Confirm password"
+              placeholder="Re-enter your password"
+              onChange={handleFormChange}
+              errorValidation={accept && form.password !== form.passwordConfirm}
+              errorMessage="Passwords must be the same"
+            />
+            <SubmitButton isLoading={loading} text="Create User" />
+          </form>
+
+          <img
+            src={addImg}
+            alt="Create User"
+            className="w-[36%] -mt-8 max-md:hidden "
+          />
         </div>
       </div>
-    </div>
-  </section>
-  </>
+    </section>
+  );
 }

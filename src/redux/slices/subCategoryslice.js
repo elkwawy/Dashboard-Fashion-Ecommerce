@@ -8,11 +8,14 @@ const token = JSON.parse(Cookies.get("token"))
 
 export const spicificSubcategory = createAsyncThunk(
   "subCategory/spicificSubcategory",
-  async ({ id }, { rejectWithValue }) => {
+  async ({ id }, { rejectWithValue },{ limit = 10 } = {}) => {
     const options = {
       method: "GET",
       url: `http://ecommerce-dot-code.vercel.app/api/category/${id}/subcategories`,
-    };
+      params: { limit },
+      
+    }
+
     try {
       const response = await axios.request(options);
       return response.data.data;

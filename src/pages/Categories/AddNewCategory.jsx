@@ -71,7 +71,7 @@ export default function AddNewCategory() {
       <p className="text-lg text-nowrap">Upload Image</p>
       <label
         htmlFor="category_id"
-        className="w-full min-h-[300px] flex flex-col items-center justify-center gap-2 p-4 border border-dashed border-gray-300 rounded cursor-pointer"
+        className="w-full min-h-[300px] flex flex-col items-center justify-center gap-2 p-4 border border-dashed border-main-color rounded cursor-pointer"
       >
         {preview ? (
           <img src={preview} alt="Preview" className="w-60 h-60 object-cover rounded-md" />
