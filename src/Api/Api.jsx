@@ -20,8 +20,16 @@ export const API = {
   deleteCategory: `${BASE_URL}/category`,
   getCategory: `${BASE_URL}/category`,
   updateCategory: `${BASE_URL}/category`,
+  addNewCategory: `${BASE_URL}/category`,
 
-
+  // sub category
+   
+  showSubCategories: `${BASE_URL}/subcategory`,
+  createSubCategory: `${BASE_URL}/subcategory`,
+  deleteSubCategory: `${BASE_URL}/subcategory`,
+  getSubCategory: `${BASE_URL}/subcategory`,
+  updateSubCategory: `${BASE_URL}/subcategory`,
+  addNewSubCategory: `${BASE_URL}/subcategory`,
   /* ======= Product ======= */
   showProducts: `${BASE_URL}/product/show`,
   createProduct: `${BASE_URL}/product/create`,

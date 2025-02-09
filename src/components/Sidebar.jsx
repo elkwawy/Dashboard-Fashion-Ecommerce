@@ -1,29 +1,89 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { FaAngleDown, FaRegUser } from "react-icons/fa";
 import { HiOutlineDocumentAdd } from "react-icons/hi";
 import { RiAdminLine, RiShoppingBag2Line } from "react-icons/ri";
 import { RxDashboard, RxDot, RxLayers } from "react-icons/rx";
 import { TbLayoutSidebarLeftCollapseFilled } from "react-icons/tb";
-import { Link, NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, NavLink, useParams } from 'react-router-dom';
+import { getAlcategories } from '../redux/slices/CategorySlice';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+
 
 const Sidebar = memo(({sidebar, closeSidebar, baseLink, subLink, lastLink}) => {
     const [openList, setopenList] = useState([false, false, false, false,false]);
     const [categoryOpenList, setCategoryOpenList] = useState([false, false, false]);
+    const dispatch = useDispatch()
+    const { categories,loading,error} = useSelector((state)=>state.categorySlice)
+    
     const links = [
         {id:'201' ,link:"admin",  icon: <RiAdminLine className={`mt-0.5 text-lg `} />, text:'Admins', children: [{id:'311' , link: "/admin/adminList", linkCompare:"adminList", text:'Admins List'},{id:'312' , link: "/admin/newAdmin", linkCompare:"newAdmin", text:'Add new Admin'}]},
         {id:'202' , link:"products", icon: <RiShoppingBag2Line className={`mt-0.5 text-lg `} />, text:'Products', children: [{id:'212' , link: "/products/products", linkCompare:"products", text:'Products'}, {id:'213' , link: "/products/newProduct", linkCompare:"newProduct", text:'New Product'}]},
         
         //  Start of category 
-        {id:'203' , link:"categories", icon: <RxLayers className={`mt-0.5 text-lg `} />, text:'Categories', children: [
-            // Women's
-            {id:'213' , link: "/category/women's", linkCompare:"women's", text:"Women's", children:[{id:'214' , link: "/categories/women's/categoryList", linkCompare:"categoryList", text:'Category List'}, {id:'215' , link: "/categories/women's/newCategory", linkCompare:"newCategory", text:'New Category'}]},
-            // Men's
-            {id:'216' , link: "/categories/men's", linkCompare:"men's", text:"Men's", children:[{id:'217' , link: "/categories/men's/categoryList", linkCompare:"categoryList", text:'Category List'}, {id:'218' , link: "/categories/men's/newCategory", linkCompare:"newCategory", text:'New Category'}]},
-            // Children
-            {id:'219' , link: "/categories/children", linkCompare:"children", text:"Children", children:[{id:'220' , link: "/categories/children/categoryList", linkCompare:"categoryList", text:'Category List'}, {id:'221' , link: "/categories/children/newCategory", linkCompare:"newCategory", text:'New Category'}]},
-        ]},
+        {
+            id: '203',
+            link: "categories",
+            icon: <RxLayers className={`mt-0.5 text-lg `} />,
+            text: 'Categories',
+            children: [
+              ...(
+                loading
+                  ? Array(3).fill().map((_, index) => ({
+                      id: `cat-skeleton-${index}`,
+                      link: "#",
+                      linkCompare: "loading",
+                      text: <Skeleton width={100} height={16} />,
+                      children: []
+                    }))
+                  : categories.map((category, index) => ({
+                      id: `cat-${index}`,
+                      link: `/categories/${category.slug}`,
+                      linkCompare: category.slug,
+                      text: category.name,
+                      children: [
+                        { 
+                          id: `cat-list-${index}`,
+                          link: `/categories/${category.slug}/${category._id}`,
+                          linkCompare: "categoryList",
+                          text: 'Category List' 
+                        },
+                        { 
+                          id: `cat-new-${index}`,
+                          link: `/subcat/AddNewsubact/${category._id}`,
+                          linkCompare: "newCategory",
+                          text: 'New Category' 
+                        }
+                      ]
+                    }))
+              ),
+              // ✅ "All Categories" 
+              {
+                id: "cat-all",
+                link: "/allcategories",
+                linkCompare: "allCategories",
+                text: "All Categories",
+                children: []
+              }
+            ]
+          }
+          
+          
+          ,
+        
+    
+        //   [
+        //     // Women's
+        //     {id:'213' , link: "/category/women's", linkCompare:"women's", text:"Women's", children:[{id:'214' , link: "/categories/women's/categoryList", linkCompare:"categoryList", text:'Category List'}, {id:'215' , link: "/categories/women's/newCategory", linkCompare:"newCategory", text:'New Category'}]},
+        //     // Men's
+        //     {id:'216' , link: "/categories/men's", linkCompare:"men's", text:"Men's", children:[{id:'217' , link: "/categories/men's/categoryList", linkCompare:"categoryList", text:'Category List'}, {id:'218' , link: "/categories/men's/newCategory", linkCompare:"newCategory", text:'New Category'}]},
+        //     // Children
+        //     {id:'219' , link: "/categories/children", linkCompare:"children", text:"Children", children:[{id:'220' , link: "/categories/children/categoryList", linkCompare:"categoryList", text:'Category List'}, {id:'221' , link: "/categories/children/newCategory", linkCompare:"newCategory", text:'New Category'}]},
+        // ]
+         
         // End of category
-
+        
         // Order
         {id:'222' , link:"order", icon: <HiOutlineDocumentAdd className={`mt-0.5 text-lg `} />, text:'Orders', children: [{id:'223' , link: "/order/orderList", linkCompare:"orderList", text:'Orders List'}]},
         // user
@@ -46,6 +106,11 @@ const Sidebar = memo(({sidebar, closeSidebar, baseLink, subLink, lastLink}) => {
         })
     }
 
+    useEffect(()=>{
+      dispatch(getAlcategories())
+    },[dispatch])
+
+  
     
     
     return (

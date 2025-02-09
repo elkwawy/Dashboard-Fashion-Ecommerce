@@ -17,7 +17,7 @@ export const addProduct = createAsyncThunk(
         throw new Error("Token is missing.");
       }
       product.images.forEach((image, index) => {
-        formData.append(`images[${index}]`, JSON.stringify(image)); 
+        formData.append(`images[${index}]`,(image)); 
       })
         formData.append('image',product.image);
         formData.append('name', product.name);

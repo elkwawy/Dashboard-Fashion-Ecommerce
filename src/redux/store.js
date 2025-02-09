@@ -3,6 +3,7 @@ import userSlice from "./slices/userSlice"
 import productSlice from "./slices/productslice"
 import AddproductSlice from "./slices/addProductSlice"
 import categorySlice from "./slices/CategorySlice"
+import subCtegoryslice from "./slices/subCategoryslice";
 
 
 const store = configureStore({
@@ -10,7 +11,8 @@ const store = configureStore({
         user:userSlice,
         productSlice,
         AddproductSlice,
-        categorySlice
+        categorySlice,
+        subCategory: subCtegoryslice
     }
 }
 )
