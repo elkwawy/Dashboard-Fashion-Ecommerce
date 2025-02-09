@@ -1,4 +1,4 @@
-export default function SubmitButton({ isLoading, text }) {
+export default function SubmitButton({ isLoading, text}) {
   return (
     <button
       type="submit"

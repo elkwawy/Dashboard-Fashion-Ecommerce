@@ -4,7 +4,6 @@ import { CiCamera } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
 import { emailRegex } from "../../Auth/Login";
 import useAdmin from "../../hooks/useAdmin";
-import { phoneRegex } from "./AddNewAdmin";
 import Loader from "../../utils/Loader";
 
 const UpdateModal = ({admin,onConfirm, onClose}) => {

@@ -8,7 +8,7 @@ const { headers } = getAuthHeader() ? getAuthHeader() : {};
 
 export const getAdmins = createAsyncThunk(
   "admins/getAdmins",
-  async ({ page, token }, { rejectWithValue }) => {
+  async ({ page, token, searchTerm }, { rejectWithValue }) => {
     console.log(page);
     
     try {
@@ -17,6 +17,7 @@ export const getAdmins = createAsyncThunk(
           role: "admin",
           page,
           limit: 7,
+          search: searchTerm || undefined,
         },
         headers,
       });
