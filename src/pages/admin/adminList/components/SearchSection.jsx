@@ -8,7 +8,7 @@ const SearchSection = memo(({onChange}) => {
         onChange(e.target.value);
     }
     return (
-        <div className="md:flex space-y-4 md:space-y-0 items-center justify-between bg-white">
+        <div className="sticky top-0 left-0 sm:block md:flex space-y-4 md:space-y-0 items-center justify-between bg-white">
             {/* search input */}
             <div className="relative md:w-[300px] lg:w-[450px] w-full mr-4">
             <input
@@ -25,7 +25,7 @@ const SearchSection = memo(({onChange}) => {
                 to={"/admin/newAdmin"}
                 className="w-full text-center px-4 text-white"
             >
-                <FaPlus className="inline-flex mr-2" /> Add Admin
+                <FaPlus className="inline-flex -mt-1 mr-0.5" /> Add Admin
             </NavLink>
             </div>
         </div>

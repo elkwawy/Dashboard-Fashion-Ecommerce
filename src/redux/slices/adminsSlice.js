@@ -4,19 +4,19 @@ import Cookies from "js-cookie";
 import { API } from "./../../Api/Api";
 import { getAuthHeader } from "./../../Auth/getAuthHeader";
 import { showToast } from "../../utils/showToast";
-const { headers } = getAuthHeader() ? getAuthHeader() : {};
 
 export const getAdmins = createAsyncThunk(
   "admins/getAdmins",
-  async ({ page, token, searchTerm }, { rejectWithValue }) => {
+  async ({ page,searchTerm }, { rejectWithValue }) => {
     console.log(page);
     
     try {
+      const { headers } = getAuthHeader();
       const response = await axios.get(API.getListOfUsers, {
         params: {
           role: "admin",
           page,
-          limit: 7,
+          limit: 6,
           search: searchTerm || undefined,
         },
         headers,
@@ -43,8 +43,9 @@ export const deleteAdmin = createAsyncThunk(
   "admins/deleteAdmin",
   async ({ id, currentUser }, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(
-        `https://ecommerce-dot-code.vercel.app/api/user/${id}`,
+      const { headers } = getAuthHeader();
+      await axios.delete(
+        `${API.deleteUser}/${id}`,
         {
           headers,
         }
@@ -74,17 +75,12 @@ export const deleteAdmin = createAsyncThunk(
 
 export const addNewAdmin = createAsyncThunk(
   "admins/addNewAdmin",
-  async ({ name, email, password, passwordConfirm }, { rejectWithValue }) => {
+  async (adminDetails, { rejectWithValue }) => {
     try {
+      const { headers } = getAuthHeader();
       const response = await axios.post(
-        `https://ecommerce-dot-code.vercel.app/api/user`,
-        {
-          name,
-          email,
-          password,
-          passwordConfirm,
-          role: "admin",
-        },
+        `${API.createUser}`,
+        adminDetails,
         { headers }
       );
       return response.data.data;
@@ -105,6 +101,7 @@ export const updateAdmin = createAsyncThunk(
   "admins/updateAdmin",
   async ({ id, name, email, currentUser }, { rejectWithValue }) => {
     try {
+      const { headers } = getAuthHeader();
       if (currentUser._id === id) {
         const response = await axios.put(
           `https://ecommerce-dot-code.vercel.app/api/user/updateMe`,
@@ -150,9 +147,9 @@ export const updateAdmin = createAsyncThunk(
 const adminsSlice = createSlice({
   name: "admins",
   initialState: {
-    admins: [],
+    admins: [], 
     totalAdmins: 0,
-    status: "idle",
+    status: "idle", // get all admins loader only !!!
     error: null,
   },
   extraReducers: (builder) => {
@@ -185,37 +182,24 @@ const adminsSlice = createSlice({
       })
       .addCase(deleteAdmin.fulfilled, (state, action) => {
         // If the API call succeeds, do nothing (since we already removed it)
-        state.status = "succeeded";
         showToast("success", "Admin was deleted successfully")
       })
       .addCase(deleteAdmin.rejected, (state, action) => {
         // If the API call fails, restore the previous state
-        state.status = "failed";
-        state.error = action.payload;
-        showToast("error", "Failed to delete admin")
-
+        showToast("error", action.payload || "Failed to delete admin")
         // Revert the deletion by re-adding the admin (re-fetching would be ideal)
         if (action.meta.arg) {
           state.admins.push(action.meta.arg);
           state.totalAdmins += 1;
         }
       })
-      .addCase(addNewAdmin.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
-      })
       .addCase(addNewAdmin.fulfilled, (state, action) => {
         state.admins.push(action.payload);
         state.totalAdmins += 1;
-        state.status = "succeeded";
+        showToast("success", "Admin was added successfully")
       })
       .addCase(addNewAdmin.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      .addCase(updateAdmin.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
+        showToast("error", action.payload || "Failed to add admin")
       })
       .addCase(updateAdmin.fulfilled, (state, action) => {
         state.admins = state.admins.map((admin) => {
@@ -224,11 +208,10 @@ const adminsSlice = createSlice({
           }
           return admin;
         });
-        state.status = "succeeded";
+        showToast("success", "Admin was updated successfully")
       })
       .addCase(updateAdmin.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
+        showToast("error", action.payload || "Failed to update admin."); // coming error or failed to update admin
       });
   },
 });

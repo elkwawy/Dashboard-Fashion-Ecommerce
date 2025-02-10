@@ -4,7 +4,7 @@ import { FaAngleRight } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import SearchSection from "./adminList/components/SearchSection";
-import RenderedAdmins from "./adminList/RenderedAdmins";
+import RenderedAdmins from "./adminList/components/RenderedAdmins";
 
 const AdminList = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -14,7 +14,7 @@ const AdminList = () => {
     const token = Cookies.get('token');
     const { admins, totalAdmins, status, error} = useSelector((state) => state.admins);
 
-    const totalPages = useMemo(() => Math.ceil(totalAdmins / 7), [totalAdmins]);
+    const totalPages = useMemo(() => Math.ceil(totalAdmins / 6), [totalAdmins]);
     
     useEffect(() => {
         const params = new URLSearchParams(searchParams);
@@ -38,17 +38,17 @@ const AdminList = () => {
     }
     return (
         <>
-            <div className="bg-white p-3 sm:p-5 h-fit  max-w-full overflow-x-auto flex flex-col gap-5  rounded-md">
+            <div className="bg-white p-3 sm:px-5 sm:py-8 h-fit  max-w-full overflow-x-auto flex flex-col gap-5  rounded-md">
                 
 
-                <SearchSection onChange={handleSearchTermChange} />
-                <RenderedAdmins token={token} page={page} searchTerm={searchTerm} />
+            <SearchSection onChange={handleSearchTermChange} />
+            <RenderedAdmins token={token} page={page} searchTerm={searchTerm} />
 
             </div>
             { <div className="w-full   mb-2 h-5 mt-5 text-gray-500 flex flex-col gap-2 sm:flex-row justify-between items-center">
                 <p className=" select-none text-sm">Showing <span>{totalAdmins ? page : 0}</span> of <span>{totalPages}</span> </p>
                 
-                {totalAdmins > 7 &&<div className=" border-[1px] ">
+                {totalAdmins > 6 &&<div className=" border-[1px] rounded-sm">
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
                         <button
                             key={pageNumber}
@@ -57,14 +57,17 @@ const AdminList = () => {
                                 page === pageNumber
                                     ? "bg-main-color text-white"
                                     : "hover:bg-gray-300"
-                            }`}
+                            }
+                            ${pageNumber === 1 ? "rounded-l-sm" : ""}
+                            ${pageNumber === totalPages ? "rounded-r-sm" : ""}
+                            `}
                         >
                             {pageNumber}
                         </button>
                     ))}
                 </div>}
                 
-                {totalAdmins > 7 && <div  className="flex border-[1px]  rounded-sm w-fit">
+                {totalAdmins > 6 && <div  className="flex border-[1px]  rounded-sm w-fit">
                     <button disabled={page === 1} onClick={prevPage} className={`p-2 px-3 trans bg-gray-100  border-r-[1px] border-gray-400 hover:bg-gray-200`}>
                         <FaAngleRight className={`  rotate-180`} />
                     </button>

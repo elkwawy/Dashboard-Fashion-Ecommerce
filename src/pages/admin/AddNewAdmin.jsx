@@ -1,40 +1,42 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import addImg from "../../assets/avater/update1.svg";
 import InputField from "../../components/Form/InputField";
 import PasswordField from "../../components/Form/PasswordField";
 import SubmitButton from "../../components/Form/SubmitButton";
+import { useDispatch } from "react-redux";
+import { addNewAdmin } from "../../redux/slices/adminsSlice";
 
 const AddNewAdmin = () => {
-    const [form, setForm] = useState({
+      const [form, setForm] = useState({
         name: "",
         email: "",
         password: "",
         passwordConfirm: "",
-        role: "user",
+        role: "admin",
       });
-      const handleFormChange = (e) => {
-        setForm({
-          ...form,
-          [e.target.name]: e.target.value,
-        });
-      };
-    
       const [loading, setLoading] = useState(false);
       const [accept, setAccept] = useState(false);
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       const [emailError, setEmailError] = useState("");
-    
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      const dispatch = useDispatch();
+
       useEffect(() => {
         emailRegex.test(form.email)
           ? setEmailError("")
           : setEmailError("Invalid email address");
       }, [form.email]);
     
+      const handleFormChange = useCallback((e) => {
+        setForm({
+          ...form,
+          [e.target.name]: e.target.value,
+        });
+      }, [form]);
+
       const handleSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);
         setAccept(true);
-    
         if (
           form.password !== form.passwordConfirm ||
           form.password?.length < 8 ||
@@ -44,15 +46,22 @@ const AddNewAdmin = () => {
           setLoading(false);
           return;
         }
-    
-        addNewUser(form, setLoading);
+        // Add new admin
+        try {
+          // Wait for dispatch to finish
+          await dispatch(addNewAdmin(form)).unwrap();
+        } catch (error) {
+          console.error("Error adding admin:", error);
+        } finally {
+          setLoading(false);
+        }
       };
 
     return (
         <section>
               <div className="bg-white rounded-xl p-6 space-y-4">
                 <div className="">
-                  <h2 className="text-xl font-semibold mb-2">Create New Admin</h2>
+                  <h2 className="text-xl font-semibold mb-2">Create a new admin</h2>
                   <p className="text-gray-500 text-lg">
                     Fill in the information below to add a new admin
                   </p>
@@ -110,8 +119,6 @@ const AddNewAdmin = () => {
                         <SubmitButton isLoading={loading} text="Add admin" />
                     </div>
                   </form>
-        
-                  
                 </div>
               </div>
             </section>

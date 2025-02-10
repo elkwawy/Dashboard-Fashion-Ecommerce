@@ -2,9 +2,9 @@ import Cookies from "js-cookie";
 import { useState } from "react";
 import { CiCamera } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
-import { emailRegex } from "../../Auth/Login";
-import useAdmin from "../../hooks/useAdmin";
-import Loader from "../../utils/Loader";
+import { emailRegex } from "../../../../Auth/Login";
+import useAdmin from "../../../../hooks/useAdmin";
+import Loader from "../../../../utils/Loader";
 
 const UpdateModal = ({admin,onConfirm, onClose}) => {
     const currentUser = useSelector((state) => state.user.user)

@@ -2,11 +2,11 @@ import { memo, useCallback, useEffect, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import { getAdmins } from "../../../redux/slices/adminsSlice";
-import Loader from "../../../utils/Loader";
-import { deleteAdmin } from "../../../redux/slices/adminsSlice";
-import DeleteModal from "../DeleteModal";
-import UpdateModal from "../UpdateModal";
+import { getAdmins } from "../../../../redux/slices/adminsSlice";
+import Loader from "../../../../utils/Loader";
+import { deleteAdmin } from "../../../../redux/slices/adminsSlice";
+import DeleteModal from "./DeleteModal";
+import UpdateModal from "./UpdateModal";
 
 const RenderedAdmins = memo(({token, page, searchTerm}) => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -51,11 +51,12 @@ const RenderedAdmins = memo(({token, page, searchTerm}) => {
         closeUpdateModal();
     };
     if (!isUpdateModalOpen && status == 'failed') 
-        return <div className="w-full min-h-[412px] flex items-center justify-center font-bold text-xl">{error}</div>;
-
+        return <div className="w-full min-h-[370px] flex items-center justify-center font-bold text-xl">
+            {typeof error === "string" ? error : error?.message || "An error occurred"}
+        </div>;
     return (
         <>
-            <div className="relative max-sm:w-[200%] sm:max-w-[100%] min-h-[412px]">
+            <div className="relative max-sm:w-[200%] sm:max-w-[100%] min-h-[370px] ">
                 <div className="w-full ">
                     <table className="w-full text-sm text-left rounded-md  border-[1px] table-fixed lg:table-auto">
                         <thead className="bg-[#F8F9FC] border-b-[1px] font-bold text-gray-600">
@@ -71,21 +72,20 @@ const RenderedAdmins = memo(({token, page, searchTerm}) => {
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="min-h-full">
+                        <tbody className="min-h-[325px]">
                             {
                                 status == "loading" ? 
-                                <tr className="relative h-[325px]">
-                                <td colSpan="3" className="relative">
-                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                                    <Loader />
-                                    </div>
-                                </td>
+                                <tr className="relative  min-h-[325px] h-[325px]">
+                                    <td colSpan="3" className="relative">
+                                        <div className="absolute top-1/2 left-1/4 sm:left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                            <Loader />
+                                        </div>
+                                    </td>
                                 </tr> : 
                                 (
                                     admins.length > 0  ? admins.map(admin => (
                                     <tr key={`${admin._id}${admin.name}`} className="bg-white border-b hover:bg-gray-50 trans">
-                                        <th scope="row" className="px-2 lg:px-6 py-2 flex items-center gap-1.5 font-medium whitespace-nowrap overflow-hidden text-ellipsis">
-                                            <div className="min-w-8 min-h-8 rounded-full bg-gray-200" />
+                                        <th scope="row" className="px-2 lg:px-6 py-2 font-medium whitespace-nowrap overflow-hidden text-ellipsis">
                                             <p className="text-ellipsis">{admin.name}</p>
                                         </th>
                                         <td className="px-2 lg:px-6 py-2  overflow-hidden text-ellipsis">
@@ -104,15 +104,24 @@ const RenderedAdmins = memo(({token, page, searchTerm}) => {
                                     </tr>
                                 )) : 
                                 (
-                                    searchTerm && 
+                                    searchTerm  ?  
                                     <tr>
                                         <td
                                             colSpan="3"
-                                            className="h-[325px] text-center py-4 text-gray-500"
+                                            className="h-[325px]  text-center py-4 text-gray-500"
                                         >
                                             No results found for "{searchTerm}"
                                         </td>
-                                    </tr>
+                                    </tr> 
+                                    : 
+                                    <tr>
+                                        <td
+                                            colSpan="3"
+                                            className="h-[325px]  text-center py-4 text-gray-500"
+                                        >
+                                            No Admins Found
+                                        </td>
+                                    </tr> 
                                 )
                                 )
                             }
