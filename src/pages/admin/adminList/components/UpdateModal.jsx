@@ -1,78 +1,85 @@
 import Cookies from "js-cookie";
-import { useState } from "react";
-import { CiCamera } from "react-icons/ci";
-import { useDispatch, useSelector } from "react-redux";
-import { emailRegex } from "../../../../Auth/Login";
+import { memo, useCallback, useEffect, useState } from "react";
+import InputField from "../../../../components/Form/InputField";
+import PasswordField from "../../../../components/Form/PasswordField";
+import SubmitButton from "../../../../components/Form/SubmitButton";
 import useAdmin from "../../../../hooks/useAdmin";
-import Loader from "../../../../utils/Loader";
+import { emailRegex } from "../../../../utils/regex";
+import { useDispatch } from "react-redux";
+import { updateAdmin } from "../../../../redux/slices/adminsSlice";
+import { showToast } from "../../../../utils/showToast";
 
-const UpdateModal = ({admin,onConfirm, onClose}) => {
-    const currentUser = useSelector((state) => state.user.user)
-    
-    const [name, setName] = useState(admin.name)
-    const [email, setEmail] = useState(admin.email)
-    const [phoneNumber, setPhoneNumber] = useState('01228050484')
+const UpdateModal = memo(({admin,currUser,onClose}) => {
+    const [loading, setLoading] = useState(false);
+    const [accept, setAccept] = useState(false);
+    const [form, setForm] = useState({
+        name: admin.name,
+        email: admin.email,
+        password: "",
+        passwordConfirm:"",
+        role:"admin",
+    });
 
-    const [nameError, setNameError] = useState('')
+    useEffect(() => {
+        emailRegex.test(form.email)
+            ? setEmailError("")
+            : setEmailError("Invalid email address");
+    }, [form.email]);
     const [emailError, setEmailError] = useState('')
-    const [phoneNumberError, setPhoneNumberError] = useState('');
-
-    const {status, error} = useSelector((state) => ({ 
-        status: state.admins.status,
-        error: state.admins.error
-    }))
-
-    const handleNameChange = (e) => { 
-        setName(e.target.value)
-    }
-
-    const handleEmailChange = (e) => { 
-        setEmail(e.target.value)
-    }
-
-    const handlePhoneNumberChange = (e) => { 
-        setPhoneNumber(e.target.value)
-    }
+    
+    const handleFormChange = useCallback((e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value,
+        });
+    }, [form]);
+    
 
     const validateInputs = () => { 
-        if (!name) { 
-            setNameError('Name is required')
-            return false
-        }
-        setNameError('');
-        if (!email) { 
+        if (!form.email) { 
             setEmailError('Email is required')
             return false
         }
-        if (!email.match(emailRegex)) { 
+        if (!form.email.match(emailRegex)) { 
             setEmailError('Invalid email format')
             return false
         }
-        setEmailError('');
-        if (!phoneNumber) {  
-            setPhoneNumberError('Phone number is required')
-            return false
-        }
-        if (!phoneNumber.match(phoneRegex)) {  
-            setPhoneNumberError('Phone number must be 11 digits')
-            return false
-        }
-        setPhoneNumberError('');
-
         return true;
     }
 
     const token = Cookies.get('token');
+    
+    const dispatch = useDispatch();
 
-    const {updateOldAdmin} = useAdmin()
+    const handleUpdateAdmin = useCallback( async(e) => { 
+        e.preventDefault()
+        setLoading(true);
+        setAccept(true);
 
-    const updateAdmin = () => { 
-        if (validateInputs()) { 
-            // const emailToBeSent = admin.email != email ? email : null;
-            updateOldAdmin(admin._id, name, email, JSON.parse(token), currentUser);
-            // onClose();
+        if (
+            form.name.length < 1 ||
+            form.password.length < 8 ||
+            form.password !== form.passwordConfirm || !validateInputs()
+        ) {
+            setLoading(false);
+            return;
         }
-    }
+        if (currUser && currUser.email !== import.meta.env.VITE_SUPER_ADMIN_EMAIL) { 
+            showToast("error", "You aren't allowed to edit an admin");
+            setLoading(false);
+            return;
+        }
+        // update admin
+        let updateMe = admin._id=== currUser._id || false ;
+        try {
+            
+            await dispatch(updateAdmin({id:admin._id, updateMe ,adminDetails:form})).unwrap();
+        } catch (error) {
+            setLoading(false);
+        } finally { 
+            setLoading(false);
+        }
+    }, [form]);
 
     return (
         <div className=" overflow-y-auto overflow-x-hidden fixed top-0 left-0 flex  z-[110]  justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -83,51 +90,55 @@ const UpdateModal = ({admin,onConfirm, onClose}) => {
                     </svg>
                     <span className="sr-only">Close modal</span>
                 </button>
-                <div className="  grid grid-cols-[200px_1fr] gap-32 ">
-                    
-                    <div className=" flex flex-col gap-5 items-center">
-                        <p className="font-bold">Upload your profile photo</p>
-                        <div className="relative rounded-full   w-44 h-44">
-                            {/* image */}
-                            <div className="w-full h-full bg-gray-200  rounded-full" />
-                            <div className=" absolute top-[95%] flex trans cursor-pointer hover:bg-blue-600 items-center justify-center rounded-full w-12 h-12 bg-main-color text-white right-0 -translate-y-1/2 -translate-x-1/2 ">
-                                <CiCamera className="text-2xl " />
-                            </div>
-                        </div>
-                    </div>
-                    {/* inputs */}
-                    <div className="w-full flex flex-col gap-5">
-                        <label className="flex flex-col gap-2">
-                            <div className="flex  justify-between">
-                                <span className="select-none cursor-pointer">Name *</span>
-                                {nameError && <div className="bg-red-100 text-red-500 px-4 rounded-sm py-1 text-sm">{nameError}</div>}
-                            </div>
-                            <input value={name} onChange={handleNameChange} type="text" placeholder="Username" className={`border-2 ${nameError ? "border-red-500" : ""} p-2 rounded-sm trans focus-within:outline-main-color outline-1`} />
-                        </label>
-                        <label className="flex flex-col gap-2">
-                            <div className="flex  justify-between">
-                                <span className="select-none cursor-pointer">Email *</span>
-                                {emailError && <div className="bg-red-100 text-red-500 px-4 rounded-sm py-1 text-sm">{emailError}</div>}
-                            </div>
-                            <input value={email} type="text" onChange={handleEmailChange} placeholder="Email address" className={`border-2 ${emailError ? "border-red-500" : ""} p-2 rounded-sm trans focus-within:outline-main-color outline-1`} />
-                        </label>
-                        <label className="flex flex-col gap-2">
-                            <div className="flex  justify-between">
-                                <span className="select-none cursor-pointer">Phone number *</span>
-                                {phoneNumberError && <div className="bg-red-100 text-red-500 px-4 rounded-sm py-1 text-sm">{phoneNumberError}</div>}
-                            </div>
-                            <input value={phoneNumber} type="text" onChange={handlePhoneNumberChange} placeholder="Phone number" className={`border-2 ${phoneNumberError ? "border-red-500" : ""} p-2 rounded-sm trans focus-within:outline-main-color outline-1`} />
-                        </label>
-                    </div>
-                </div>
-                <div className="w-full flex justify-end items-center mt-8">
-                    {status !== "loading" &&  <button onClick={updateAdmin}  className=" px-5 py-2 rounded-sm text-white hover:bg-blue-600 bg-main-color trans">Update admin</button>}
-                    {status === "loading" && <div className="w-[118px] h-10 flex items-center justify-center"><Loader /></div>}
-                </div>
+                {/* inputs */}
+                <form
+                    onSubmit={handleUpdateAdmin}
+                    className="space-y-5 w-3/4 mx-auto text-right"
+                    >
+                    <InputField
+                        type="text"
+                        name="name"
+                        label="Name"
+                        value={form.name}
+                        placeholder="Enter your name"
+                        onChange={handleFormChange}
+                        errorValidation={accept && form.name.length < 1}
+                        errorMessage="Name is required"
+                    />
+                    <InputField
+                        type="email"
+                        name="email"
+                        label="Email"
+                        value={form.email}
+                        placeholder="Enter your email address"
+                        onChange={handleFormChange}
+                        errorValidation={accept && emailError.length > 0}
+                        errorMessage={emailError}
+                    />
+                    <PasswordField
+                        name="password"
+                        value={form.password}
+                        label="Password"
+                        placeholder="Enter a strong password"
+                        onChange={handleFormChange}
+                        errorValidation={accept && form.password.length < 8}
+                        errorMessage="Password must be more than 8 char"
+                    />
+                    <PasswordField
+                        name="passwordConfirm"
+                        value={form.passwordConfirm}
+                        label="Confirm password"
+                        placeholder="Re-enter your password"
+                        onChange={handleFormChange}
+                        errorValidation={accept && form.password !== form.passwordConfirm}
+                        errorMessage="Passwords must be the same"
+                    />
+                    <SubmitButton isLoading={loading} text="Update admin" />
+                </form>
             </div>
             <div onClick={onClose} className='fixed w-full h-full top-0 left-0 bg-black/50 z-[100] backdrop-blur-sm ' />
         </div>
     )
-}
+})
 
 export default UpdateModal

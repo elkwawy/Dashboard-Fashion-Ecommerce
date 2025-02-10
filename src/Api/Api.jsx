@@ -14,6 +14,7 @@ export const API = {
   deleteUser: `${BASE_URL}/user`,
   getUser: `${BASE_URL}/user`,
   updateUser: `${BASE_URL}/user`,
+  updateMe: `${BASE_URL}/user/updateMe`,
   getListOfUsers : `${BASE_URL}/user`,
   getLoggedUser : `${BASE_URL}/user/getMe`,
   /* ======= Category ======= */

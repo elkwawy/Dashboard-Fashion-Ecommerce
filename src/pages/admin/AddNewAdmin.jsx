@@ -5,6 +5,7 @@ import PasswordField from "../../components/Form/PasswordField";
 import SubmitButton from "../../components/Form/SubmitButton";
 import { useDispatch } from "react-redux";
 import { addNewAdmin } from "../../redux/slices/adminsSlice";
+import { emailRegex } from "../../Auth/Login";
 
 const AddNewAdmin = () => {
       const [form, setForm] = useState({
@@ -17,7 +18,7 @@ const AddNewAdmin = () => {
       const [loading, setLoading] = useState(false);
       const [accept, setAccept] = useState(false);
       const [emailError, setEmailError] = useState("");
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      
       const dispatch = useDispatch();
 
       useEffect(() => {

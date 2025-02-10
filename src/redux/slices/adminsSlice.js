@@ -99,31 +99,20 @@ export const addNewAdmin = createAsyncThunk(
 );
 export const updateAdmin = createAsyncThunk(
   "admins/updateAdmin",
-  async ({ id, name, email, currentUser }, { rejectWithValue }) => {
+  async ({id, updateMe, adminDetails}, { rejectWithValue }) => {
     try {
       const { headers } = getAuthHeader();
-      if (currentUser._id === id) {
+      if (updateMe) {
         const response = await axios.put(
-          `https://ecommerce-dot-code.vercel.app/api/user/updateMe`,
-          {
-            name,
-            email,
-            role: "admin",
-          },
+          `${API.updateMe}`,
+          adminDetails,
           { headers }
         );
         return response.data.data;
       } else {
-        const updateData = { name }; // Start with just the name to update
-
-        // If the email is different, include it
-        if (email) {
-          updateData.email = email;
-        }
-        updateData.role = "admin";
         const response = await axios.put(
-          `https://ecommerce-dot-code.vercel.app/api/user/${id}`,
-          updateData,
+          `${API.updateUser}/${id}`,
+          adminDetails,
           {
             headers,
           }

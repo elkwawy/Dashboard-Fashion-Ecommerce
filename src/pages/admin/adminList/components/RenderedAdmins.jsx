@@ -7,6 +7,7 @@ import Loader from "../../../../utils/Loader";
 import { deleteAdmin } from "../../../../redux/slices/adminsSlice";
 import DeleteModal from "./DeleteModal";
 import UpdateModal from "./UpdateModal";
+import { showToast } from "../../../../utils/showToast";
 
 const RenderedAdmins = memo(({token, page, searchTerm}) => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -39,16 +40,14 @@ const RenderedAdmins = memo(({token, page, searchTerm}) => {
     };
 
     const confirmDelete = () => {
-        if (clickedAdmin) {
+        if (currentUser && currentUser.email !== import.meta.env.VITE_SUPER_ADMIN_EMAIL) { 
+            showToast("error", "You aren't allowed to deleta an admin");
+            return;
+        }
+        if (clickedAdmin && currentUser) {
             dispatch(deleteAdmin({ id: clickedAdmin._id, currentUser }));
         }
         closeDeleteModal();
-    };
-    const confirmUpdate = () => {
-        if (clickedAdmin) {
-            // update
-        }
-        closeUpdateModal();
     };
     if (!isUpdateModalOpen && status == 'failed') 
         return <div className="w-full min-h-[370px] flex items-center justify-center font-bold text-xl">
@@ -139,7 +138,7 @@ const RenderedAdmins = memo(({token, page, searchTerm}) => {
             {
                 isUpdateModalOpen && <UpdateModal 
                                     admin={clickedAdmin}
-                                    onConfirm={confirmUpdate}
+                                    currUser={currentUser}
                                     onClose={closeUpdateModal}
                                 />
             }
