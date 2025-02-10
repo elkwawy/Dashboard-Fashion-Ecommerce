@@ -20,7 +20,7 @@ const dispatch = useDispatch();
     Desc: "",
     image:null ,
     size:[],
-    images: [],
+    images: null,
     size:[],
     price: 0,
     priceAfterDiscount:0,

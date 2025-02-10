@@ -5,6 +5,12 @@ import RootLayout from "./pages/RootLayout";
 import Loader from "./utils/Loader";
 
 import AddProduct from './pages/AddProduct/AddProduct';
+import SubCategory from './pages/SubCategory/SubCategory';
+import UpdateSubCat from './pages/SubCategory/UpdateSubCat';
+import AddNewSub from './pages/SubCategory/AddNewSub';
+import AllCategory from './pages/Categories/AllCategory';
+import UpdateCategory from './pages/Categories/UpdateCategory';
+import AddNewCategory from './pages/Categories/AddNewCategory';
 import Products from './pages/Products/Products';
 
 
@@ -29,6 +35,12 @@ const routes = [
   {path:'/admin/newAdmin', element:<AddNewAdmin/>},
   {path:'/products/products', element:<Products/>},
   {path:'/products/newProduct', element:<AddProduct/>},
+  {path:'/allcategories', element:<AllCategory/>},
+  {path:`/categories/:categoryName/:id`,element:<SubCategory/>},
+  {path:`/cattegory/updatCategory/:id`,element:<UpdateCategory/>},
+  {path:"/addNewCategory",element:<AddNewCategory/>},
+  {path:`/subcat/updatsubact/:id`,element:<UpdateSubCat/>},
+  {path:'/subcat/AddNewsubact/:id',element:<AddNewSub/>},
   {path:'/user/usersList', element:<UsersList/>},
   {path:'/user/updateUser/:id', element:<UpdataUser/>},
   {path:'/user/newUser', element:<AddUser/>},
