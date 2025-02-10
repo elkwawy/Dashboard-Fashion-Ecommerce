@@ -8,17 +8,17 @@ const token = JSON.parse(Cookies.get("token"))
 
 export const spicificSubcategory = createAsyncThunk(
   "subCategory/spicificSubcategory",
-  async ({ id }, { rejectWithValue },{ limit = 10 } = {}) => {
+  async ({ id, page , limit }, { rejectWithValue }) => {
     const options = {
       method: "GET",
-      url: `http://ecommerce-dot-code.vercel.app/api/category/${id}/subcategories`,
-      params: { limit },
+      url: `http://ecommerce-dot-code.vercel.app/api/category/${id}/subcategories?&page=${page}`,
+      params: { page,limit },
       
     }
 
     try {
       const response = await axios.request(options);
-      return response.data.data;
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || "Something went wrong");
     }
@@ -127,10 +127,16 @@ const subCategorySlice = createSlice({
   name: "subCategory",
   initialState: {
     subCategory: [],
+    currentPage: 1,
+    limit:5,
     loading: false,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    setPage: (state, action) => {
+      state.currentPage = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(spicificSubcategory.pending, (state) => {
@@ -169,9 +175,7 @@ const subCategorySlice = createSlice({
         state.error = null;
       })
       .addCase(deletesubCategory.fulfilled, (state, action) => {
-        const newsubCategories = state.subCategory.filter(subCate => subCate._id !== action.payload._id)
-      
-        state.subCategory = newsubCategories;
+        state.subCategory = state.subCategory.filter(subCate => subCate._id !== action.meta.arg.id);
         state.error = null;
     })
       .addCase(onespicificSubcategory.pending, (state) => {
@@ -186,5 +190,5 @@ const subCategorySlice = createSlice({
 
   },
 });
-
+export const { setPage } = subCategorySlice.actions;
 export default subCategorySlice.reducer;

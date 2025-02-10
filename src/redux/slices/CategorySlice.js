@@ -223,7 +223,7 @@ const categorySlice = createSlice({
             state.error = null;
         })
         .addCase(deleteCategory.fulfilled, (state, action) => {
-            const newCategories = state.categories.filter(category => category._id!== action.payload._id);
+            const newCategories = state.categories.filter(category => category._id!== action.meta.arg.id);
             state.categories = newCategories;
             state.error = null;
         })

@@ -33,9 +33,6 @@ export default function AllCategory() {
 
     const handelDelet = async(id)=>{
       await dispatch(deleteCategory({id}))
-      
-      dispatch(getAlcategories());
-
     }
     
     return (

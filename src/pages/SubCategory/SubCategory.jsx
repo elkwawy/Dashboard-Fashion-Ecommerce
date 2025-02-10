@@ -1,28 +1,56 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import { FaEdit, FaPlus } from "react-icons/fa";
+import { FaAngleRight, FaEdit, FaPlus } from "react-icons/fa";
 import { IoTrashOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
 import Loader from "../../utils/Loader";
 import { deletesubCategory, spicificSubcategory } from "../../redux/slices/subCategoryslice";
 import UpdateSubCat from "./UpdateSubCat";
+import { setPage } from "../../redux/slices/subCategoryslice";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 export default function SubCategory() {
-  const { loading, error, subCategory } = useSelector((state) => state.subCategory);
+  const { loading, error, subCategory,currentPage ,limit } = useSelector((state) => state.subCategory);
   const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
    const {id} =useParams()
   const [update,setApdate] = useState(false)
+    
+  
+  const totalPages = subCategory.totalDocuments ? Math.ceil(subCategory.totalDocuments / limit) : 0;
+   
+  
+const handlePageChange = (newPage) => {
+  dispatch(setPage(newPage));
+};
+
+const handleNextPage = () => {
+  if (currentPage < totalPages) {
+    dispatch(setPage(currentPage + 1));
+  }
+};
+
+const handlePreviousPage = () => {
+  if (currentPage > 1) {
+    dispatch(setPage(currentPage - 1));
+  }
+};
+
+
+  
+  console.log(subCategory);
+  
+     
 
   useEffect(() => {
     if (id) {
-      dispatch(spicificSubcategory({ id: id }));
+      dispatch(spicificSubcategory({ id: id,page:currentPage , limit}));
     }
-  }, [dispatch, id]);
+  }, [dispatch, id , currentPage ,limit]);
 
-  const filteredSubCategories = Array.isArray(subCategory)
-  ? subCategory.filter((subcat) =>
+  const filteredSubCategories = Array.isArray(subCategory.data)
+  ? subCategory.data.filter((subcat) =>
       subcat.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
   : [];
@@ -33,7 +61,7 @@ export default function SubCategory() {
 
   return (
     <section className="-mt-5">
-      <div className="bg-white rounded-xl p-4 py-6 my-4">
+      <div className="bg-white min-h-[500px] rounded-xl p-4 py-6 my-4">
         <div className="md:flex space-y-4 md:space-y-0 items-center justify-between bg-white">
           <div className="relative md:w-[300px] lg:w-[450px] w-full mr-4">
             <input
@@ -101,7 +129,7 @@ export default function SubCategory() {
                             >
                               <FaEdit className="w-5 h-5" />
                             </NavLink>
-                            {update && <UpdateSubCat/>}
+                            
                             <button
                               className="transition-colors bg-[#FAFBFD] py-1 px-2 duration-200 text-red-500 focus:outline-none flex items-center justify-center"
                               onClick={() => handelDelet(subcat._id)}
@@ -125,6 +153,15 @@ export default function SubCategory() {
           </div>
         </div>
       </div>
+
+
+       {subCategory ? <div className='flex items-center justify-between'><p>Showing <span>{subCategory.pageNumber}</span>of<span> {totalPages}</span></p>
+            <div className='py-2'>
+              <button className='p-2 border border-gray-300 bg-white' onClick={handlePreviousPage}  ><IoIosArrowBack /></button>
+              <button className='p-2 border border-gray-300 bg-white'onClick={handleNextPage} ><IoIosArrowForward  /></button>
+            </div> 
+            </div>:""}
+
     </section>
   );
 }
