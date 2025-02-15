@@ -14,7 +14,7 @@ const useCategoryHook = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${API.showCategories}${conditions}`,
+        `${API.category}${conditions}`,
         getAuthHeader()
       );
       setCategories(response.data.data);
