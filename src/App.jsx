@@ -9,6 +9,7 @@ import {
 import RootLayout from "./pages/RootLayout";
 import Loader from "./utils/Loader";
 
+
 import Products from "./pages/products/Products";
 import AddOrUpdateProduct from "./pages/products/AddOrUpdateProduct";
 
@@ -40,6 +41,7 @@ const routes = [
   { path: "/categories/addCategory", element: <AddCategory /> },
   { path: "*", element: <NotFound /> },
 ];
+
 
 const Router = createBrowserRouter(
   createRoutesFromElements(

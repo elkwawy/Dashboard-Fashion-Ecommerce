@@ -1,226 +1,128 @@
-import Cookies from "js-cookie";
-import { useRef, useState } from "react";
-import { CiCamera } from "react-icons/ci";
-import { useSelector } from "react-redux";
-import { emailRegex, passwordRegex } from "../../Auth/Login";
-import useAdmin from "../../hooks/useAdmin";
-import useShowToast from "../../hooks/useShowToast";
-import Loader from "../../utils/Loader";
-import { FiUploadCloud } from "react-icons/fi";
+import { useCallback, useEffect, useState } from "react";
+import addImg from "../../assets/avater/update1.svg";
+import InputField from "../../components/Form/InputField";
+import PasswordField from "../../components/Form/PasswordField";
+import SubmitButton from "../../components/Form/SubmitButton";
+import { useDispatch } from "react-redux";
+import { addNewAdmin } from "../../redux/slices/adminsSlice";
+import { emailRegex } from "../../Auth/Login";
 
-export const phoneRegex = /^\d{11}$/;
 const AddNewAdmin = () => {
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
-    const [phoneNumber, setPhoneNumber] = useState('')
-    const [password, setPassword] = useState('')
-    const [passwordConfirm, setPasswordConfirm] = useState('')
+      const [form, setForm] = useState({
+        name: "",
+        email: "",
+        password: "",
+        passwordConfirm: "",
+        role: "admin",
+      });
+      const [loading, setLoading] = useState(false);
+      const [accept, setAccept] = useState(false);
+      const [emailError, setEmailError] = useState("");
+      
+      const dispatch = useDispatch();
 
-    const [nameError, setNameError] = useState('')
-    const [emailError, setEmailError] = useState('')
-    const [phoneNumberError, setPhoneNumberError] = useState('')
-    const [passwordError, setPasswordError] = useState('')
-    const [passwordConfirmError, setPasswordConfirmError] = useState('');
-
-    const [uploadedImg, setUploadedImg] = useState(null);
-    const [isDragging, setIsDragging] = useState(false)
-
-    const fileRef = useRef(null);
-    const {showToast} = useShowToast()
-
-    const status = useSelector((state => state.admins.status))
-    const error = useSelector((state => state.admins.error))
-
-    const handleNameChange = (e) => { 
-        setName(e.target.value)
-    }
-
-    const handleEmailChange = (e) => { 
-        setEmail(e.target.value)
-    }
-
-    const handlePhoneNumberChange = (e) => { 
-        setPhoneNumber(e.target.value)
-    }
-
-    const handlePasswordChange = (e) => { 
-        setPassword(e.target.value)
-    }
+      useEffect(() => {
+        emailRegex.test(form.email)
+          ? setEmailError("")
+          : setEmailError("Invalid email address");
+      }, [form.email]);
     
-    const handlePasswordConfirmChange = (e) => { 
-        setPasswordConfirm(e.target.value)
-    }
+      const handleFormChange = useCallback((e) => {
+        setForm({
+          ...form,
+          [e.target.name]: e.target.value,
+        });
+      }, [form]);
 
-
-    const validateInputs = () => {
-        let isValid = true;
-
-        if (!name) {
-            setNameError("Name is required");
-            isValid = false;
-        } else {
-            setNameError("");
+      const handleSubmit = async (event) => {
+        event.preventDefault();
+        setLoading(true);
+        setAccept(true);
+        if (
+          form.password !== form.passwordConfirm ||
+          form.password?.length < 8 ||
+          form.name?.length < 1 ||
+          !emailRegex.test(form.email)
+        ) {
+          setLoading(false);
+          return;
         }
-
-        if (!email) {
-            setEmailError("Email is required");
-            isValid = false;
-        } else if (!email.match(emailRegex)) {
-            setEmailError("Invalid email format");
-            isValid = false;
-        } else {
-            setEmailError("");
+        // Add new admin
+        try {
+          // Wait for dispatch to finish
+          await dispatch(addNewAdmin(form)).unwrap();
+        } catch (error) {
+          console.error("Error adding admin:", error);
+        } finally {
+          setLoading(false);
         }
-
-        if (!phoneNumber) {
-            setPhoneNumberError("Phone number is required");
-            isValid = false;
-        } else if (!phoneNumber.match(phoneRegex)) {
-            setPhoneNumberError("Phone number must be 11 digits");
-            isValid = false;
-        } else {
-            setPhoneNumberError("");
-        }
-
-        if (!password) {
-            setPasswordError("Password is required");
-            isValid = false;
-        } else if (!password.match(passwordRegex)) {
-            setPasswordError("Password must be at least 8 characters");
-            isValid = false;
-        } else {
-            setPasswordError("");
-        }
-
-        if (!passwordConfirm) {
-            setPasswordConfirmError("Password is required");
-            isValid = false;
-        } else if (password !== passwordConfirm) {
-            setPasswordConfirmError("Passwords do not match");
-            isValid = false;
-        } else {
-            setPasswordConfirmError("");
-        }
-
-        return isValid;
-    };
-
-    const token = Cookies.get('token');
-    const parsedToken = token ? JSON.parse(token) : null;
-    if (!parsedToken) {
-        showToast("error", "Authentication problem occurred");
-        return;
-    }
-    const {addAnAdmin} = useAdmin();
-    const addAdmin = async () => {
-        if (validateInputs()) {
-            addAnAdmin(name, email, password, passwordConfirm);
-        };
-    }
-
-    const handleUploadFile = () => { 
-        if (fileRef && fileRef.current) { 
-            fileRef.current.click();
-        }
-    }
-
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            if (file.type.startsWith("image/")) {
-                const preview = URL.createObjectURL(file);
-                setUploadedImg(preview);
-                fileRef.current.value = ""; // Reset file input
-            } else {
-                showToast("error", "Please select an image");
-            }
-        }
-    };
-
-    const onDragOver = (e) => {
-        e.preventDefault();
-        setIsDragging(true);
-    };
-    const onDrop = (e) => {
-        e.preventDefault();
-        setIsDragging(false);
-        const file = e.dataTransfer.files[0]; // Extract the file from the event
-        if (file) {
-            if (file.type.startsWith("image/")) {
-                const preview = URL.createObjectURL(file);
-                setUploadedImg(preview);
-            } else {
-                showToast("error", "Please select an image");
-            }
-        }
-    };
-
-    const onDragLeave = (e) => { 
-        e.preventDefault();
-        setIsDragging(false);
-    }
+      };
 
     return (
-        <div className="w-full pb-2">
-            <div className="w-full rounded-md bg-white p-5 grid grid-cols-1  place-items-center min-[900px]:place-items-start min-[900px]:grid-cols-[200px_1fr] gap-10 sm:gap-20 lg:gap-40 ">
-                
-                <div onClick={handleUploadFile} onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop} className={`relative rounded-full ${isDragging ? "scale-105 " : ""} trans  ${!uploadedImg ? " border-dashed border-main-color" : ""} border-[1px] cursor-pointer flex items-center justify-center w-44 h-44 lg:w-56 lg:h-56`}>
-                    {/* image */}
-                    {!uploadedImg && <div className={`w-full h-full   rounded-full  flex flex-col gap-2 items-center justify-center text-xs`} >
-                        <FiUploadCloud className="text-gray-400 text-5xl" />
-                        <p className="font-semibold text-gray-400 ">Drag here <span className="text-main-color">or</span> Browse</p>
-                    </div>}
-                    {uploadedImg && <img src={uploadedImg} alt=""  className="w-full h-full rounded-full object-cover"/>  }
-                    <div className=" absolute top-[95%] flex trans cursor-pointer hover:bg-blue-600 items-center justify-center rounded-full w-12 h-12 bg-main-color text-white right-0 -translate-y-1/2 -translate-x-1/2 ">
-                        <CiCamera role="button"  className="text-2xl " />
-                        <input ref={fileRef} onChange={handleFileChange} type="file" className="hidden" />
+        <section>
+              <div className="bg-white rounded-xl p-6 space-y-4">
+                <div className="">
+                  <h2 className="text-xl font-semibold mb-2">Create a new admin</h2>
+                  <p className="text-gray-500 text-lg">
+                    Fill in the information below to add a new admin
+                  </p>
+                </div>
+        
+                <div className="flex justify-between gap-8">
+                    <img
+                        src={addImg}
+                        alt="Create User"
+                        className="w-[36%] -mt-8 max-md:hidden "
+                    />
+                  <form
+                    onSubmit={handleSubmit}
+                    className="space-y-5 w-full lg:w-[45%] max-md:w-full"
+                  >
+                    <InputField
+                      type="text"
+                      name="name"
+                      label="Name"
+                      value={form.name}
+                      placeholder="Enter your name"
+                      onChange={handleFormChange}
+                      errorValidation={accept && form.name.length < 1}
+                      errorMessage="Name is required"
+                    />
+                    <InputField
+                      type="email"
+                      name="email"
+                      label="Email"
+                      value={form.email}
+                      placeholder="Enter your email address"
+                      onChange={handleFormChange}
+                      errorValidation={accept && emailError.length > 0}
+                      errorMessage={emailError}
+                    />
+                    <PasswordField
+                      name="password"
+                      value={form.password}
+                      label="Password"
+                      placeholder="Enter a strong password"
+                      onChange={handleFormChange}
+                      errorValidation={accept && form.password.length < 8}
+                      errorMessage="Password must be more than 8 char"
+                    />
+                    <PasswordField
+                      name="passwordConfirm"
+                      value={form.passwordConfirm}
+                      label="Confirm password"
+                      placeholder="Re-enter your password"
+                      onChange={handleFormChange}
+                      errorValidation={accept && form.password !== form.passwordConfirm}
+                      errorMessage="Passwords must be the same"
+                    />
+                    <div className="w-full text-right">
+                        <SubmitButton isLoading={loading} text="Add admin" />
                     </div>
+                  </form>
                 </div>
-                {/* inputs */}
-                <div className="w-full flex flex-col gap-5">
-                    <label className="flex flex-col gap-2">
-                        <div className="flex  justify-between">
-                            <span className="select-none cursor-pointer">Name *</span>
-                            {nameError && <div className="bg-red-100 text-red-500 px-2 sm:px-4 rounded-sm py-1 text-xs sm:text-sm">{nameError}</div>}
-                        </div>
-                        <input value={name} onChange={handleNameChange} type="text" placeholder="Username" className={`border-2 ${nameError ? "border-red-500" : ""} p-2 rounded-sm trans focus-within:outline-main-color outline-1`} />
-                    </label>
-                    <label className="flex flex-col gap-2">
-                        <div className="flex  justify-between">
-                            <span className="select-none cursor-pointer">Email *</span>
-                            {emailError && <div className="bg-red-100 text-red-500 px-2 sm:px-4 rounded-sm py-1 text-xs sm:text-sm">{emailError}</div>}
-                        </div>
-                        <input value={email} type="text" onChange={handleEmailChange} placeholder="Email address" className={`border-2 ${emailError ? "border-red-500" : ""} p-2 rounded-sm trans focus-within:outline-main-color outline-1`} />
-                    </label>
-                    <label className="flex flex-col gap-2">
-                        <div className="flex  justify-between">
-                            <span className="select-none cursor-pointer">Phone number *</span>
-                            {phoneNumberError && <div className="bg-red-100 text-red-500 px-2 sm:px-4 rounded-sm py-1 text-xs sm:text-sm">{phoneNumberError}</div>}
-                        </div>
-                        <input value={phoneNumber} type="text" onChange={handlePhoneNumberChange} placeholder="Phone number" className={`border-2 ${phoneNumberError ? "border-red-500" : ""} p-2 rounded-sm trans focus-within:outline-main-color outline-1`} />
-                    </label>
-                    <label className="flex flex-col gap-2">
-                        <div className="flex  justify-between">
-                            <span className="select-none cursor-pointer">Password *</span>
-                            {passwordError && <div className="bg-red-100 text-red-500 px-2 sm:px-4 rounded-sm py-1 text-xs sm:text-sm">{passwordError}</div>}
-                        </div>
-                        <input value={password} type="password" onChange={handlePasswordChange} placeholder="Password" className={`border-2 ${passwordError ? "border-red-500" : ""} p-2 rounded-sm trans focus-within:outline-main-color outline-1`} />
-                    </label>
-                    <label className="flex flex-col gap-2">
-                        <div className="flex  justify-between">
-                            <span className="select-none cursor-pointer">Confirm password *</span>
-                            {passwordConfirmError && <div className="bg-red-100 text-red-500 px-2 sm:px-4 rounded-sm py-1 text-xs sm:text-sm">{passwordConfirmError}</div>}
-                        </div>
-                        <input value={passwordConfirm} type="password" onChange={handlePasswordConfirmChange} placeholder="Confirm Password" className={`border-2 ${passwordConfirmError ? "border-red-500" : ""} p-2 rounded-sm trans focus-within:outline-main-color outline-1`} />
-                    </label>
-                </div>
-            </div>
-            <div className="w-full flex  justify-center min-[900px]:justify-end items-center mt-5">
-                {status !== "loading" && <button onClick={addAdmin} className=" px-5 py-2 rounded-sm text-white hover:bg-blue-600 bg-main-color trans">Add admin</button>}
-                {status == "loading" && <div className="w-[118px] h-10 flex items-center justify-center"><Loader /></div>}
-            </div>
-
-        </div>
+              </div>
+            </section>
     )
 }
 

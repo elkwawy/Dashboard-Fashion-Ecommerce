@@ -19,7 +19,7 @@ export default function PasswordField({
       <div className="flex justify-between items-center">
         <label
           htmlFor={name}
-          className="block font-semibold text-base text-gray-700"
+          className="block select-none font-semibold text-base text-gray-700"
         >
           {label}
         </label>
@@ -47,13 +47,13 @@ export default function PasswordField({
         />
 
         {passType === "password" ? (
-          <div className="bg-white absolute p-1.5 cursor-pointer top-[7px] right-2">
+          <button type="button" className="bg-white absolute p-1.5 cursor-pointer top-[7px] right-2">
             <FaEye onClick={togglePassType} className="text-black" />
-          </div>
+          </button>
         ) : (
-          <div className="bg-white absolute p-1.5 cursor-pointer top-[7px] right-2">
+          <button type="button" className="bg-white absolute p-1.5 cursor-pointer top-[7px] right-2">
             <FaEyeSlash onClick={togglePassType} className="text-black" />
-          </div>
+          </button>
         )}
       </div>
     </div>

@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { memo } from 'react'
 
-const DeleteModal = ({isOpen, onClose, onConfirm, adminName}) => {
+const DeleteModal = memo(({isOpen, onClose, onConfirm, adminName}) => {
     if (!isOpen) return null;
     return (
         <div className=" overflow-y-auto overflow-x-hidden fixed top-0 left-0 flex  z-[110]  justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -27,6 +27,6 @@ const DeleteModal = ({isOpen, onClose, onConfirm, adminName}) => {
             <div onClick={onClose} className='fixed w-full h-full top-0 left-0 bg-black/50 z-[100] backdrop-blur-sm ' />
         </div>
     )
-}
+})
 
-export default DeleteModal
+export default DeleteModal;
