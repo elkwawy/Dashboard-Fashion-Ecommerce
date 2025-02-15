@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { API } from "../../Api/Api";
 
 export const getAlcategories = createAsyncThunk("getAlcategories", async () => {
   const options = {
@@ -35,6 +36,7 @@ const categorySlice = createSlice({
   initialState: {
     categories: [],
     loading: false,
+    loadingSub: false,
     error: null,
     subCategory: [],
     subid: "",
@@ -60,17 +62,17 @@ const categorySlice = createSlice({
         state.error = action.error;
       })
       .addCase(specificCategory.pending, (state) => {
-        state.loading = true;
+        state.loadingSub = true;
         state.error = null;
       })
       .addCase(specificCategory.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loadingSub = false;
         state.subCategory = action.payload;
         state.subid = action.payload.defaultSubid;
         state.error = null;
       })
       .addCase(specificCategory.rejected, (state, action) => {
-        state.loading = false;
+        state.loadingSub = false;
         state.error = action.error;
       });
   },
