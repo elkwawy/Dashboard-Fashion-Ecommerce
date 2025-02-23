@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userSlice from "./slices/userSlice";
-
 import productSlice from "../pages/products/productSlice";
-import categorySlice from "./slices/CategorySlice";
 import adminsSlice from "./slices/adminsSlice";
+import categorySlice from "./slices/CategorySlice";
+import subCtegoryslice from "./slices/subCategoryslice";
+import orderSlice from "./slices/orderSlice";
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,8 @@ const store = configureStore({
     products: productSlice,
     categorySlice,
     admins: adminsSlice,
+    subCategory: subCtegoryslice,
+    orderSlice,
   },
 });
 

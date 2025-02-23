@@ -14,14 +14,25 @@ export const API = {
   deleteUser: `${BASE_URL}/user`,
   getUser: `${BASE_URL}/user`,
   updateUser: `${BASE_URL}/user`,
-
-  updateMe: `${BASE_URL}/user/updateMe`,
   getListOfUsers : `${BASE_URL}/user`,
   getLoggedUser : `${BASE_URL}/user/getMe`,
 
   /* ======= Category ======= */
   category: `${BASE_URL}/category`,
-  
+  showCategories: `${BASE_URL}/category`,
+  createCategory: `${BASE_URL}/category`,
+  deleteCategory: `${BASE_URL}/category`,
+  getCategory: `${BASE_URL}/category`,
+  updateCategory: `${BASE_URL}/category`,
+  addNewCategory: `${BASE_URL}/category`,
+  // sub category
+  showSubCategories: `${BASE_URL}/subcategory`,
+  createSubCategory: `${BASE_URL}/subcategory`,
+  deleteSubCategory: `${BASE_URL}/subcategory`,
+  getSubCategory: `${BASE_URL}/subcategory`,
+  updateSubCategory: `${BASE_URL}/subcategory`,
+  addNewSubCategory: `${BASE_URL}/subcategory`,
+
   /* ======= Product ======= */
   product: `${BASE_URL}/product`,
   /* ======= Orders ======= */

@@ -19,13 +19,21 @@ const UsersList = React.lazy(() => import("./pages/Users/UsersList"));
 const AddUser = React.lazy(() => import("./pages/Users/AddUser"));
 const UpdataUser = React.lazy(() => import("./pages/Users/UpdateUser"));
 
-const AddCategory = React.lazy(() => import("./pages/Categories/AddCategory"));
-
 const AdminList = React.lazy(() => import("./pages/admin/AdminList"));
 const AddNewAdmin = React.lazy(() => import("./pages/admin/AddNewAdmin"));
 
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 const Login = React.lazy(() => import("./Auth/Login"));
+
+
+import AllCategory from './pages/Categories/AllCategory';
+import AddNewCategory from './pages/Categories/AddNewCategory';
+import UpdateCategory from './pages/Categories/UpdateCategory';
+
+import SubCategory from './pages/SubCategory/SubCategory';
+import AddNewSub from './pages/SubCategory/AddNewSub';
+import UpdateSubCat from './pages/SubCategory/UpdateSubCat';
+import Orders from "./pages/Orders/Orders";
 
 // add routes here
 const routes = [
@@ -36,9 +44,15 @@ const routes = [
   { path: "/products/newProduct", element: <AddOrUpdateProduct /> },
   { path: "/products/updateProduct", element: <AddOrUpdateProduct /> },
   { path: "/user/usersList", element: <UsersList /> },
-  { path: "/user/updateUser/:id", element: <UpdataUser /> },
   { path: "/user/newUser", element: <AddUser /> },
-  { path: "/categories/addCategory", element: <AddCategory /> },
+  { path: "/user/updateUser/:id", element: <UpdataUser /> },
+  {path:'/allcategories', element:<AllCategory/>},
+  {path:"/addNewCategory",element:<AddNewCategory/>},
+  {path:`/cattegory/updatCategory/:id`,element:<UpdateCategory/>},
+  {path:`/categories/:categoryName/:id`,element:<SubCategory/>},
+  {path:'/subcat/AddNewsubact/:id',element:<AddNewSub/>},
+  {path:`/subcat/updatsubact/:id`,element:<UpdateSubCat/>},
+  {path:'/order/orderList',element:<Orders/>},
   { path: "*", element: <NotFound /> },
 ];
 

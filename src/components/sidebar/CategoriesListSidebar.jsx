@@ -3,13 +3,17 @@ import { FaAngleDown } from "react-icons/fa";
 import { RxDot } from "react-icons/rx";
 import { NavLink, useLocation } from "react-router-dom";
 import useCategoryHook from "../../hooks/useCategoryHook";
+import { useDispatch, useSelector } from "react-redux";
+import { getAlcategories } from "../../redux/slices/CategorySlice";
 
 const CategoriesListSidebar = memo(({isOpen, closeSidebar}) => {
     const [oneCategoryOpen, setOneCategoryOpen] = useState(false)
     const [openCategory, setOpenCategory] = useState([])
-    const {categories,loading,  getAllCategories} = useCategoryHook();
+    const dispatch = useDispatch()
+    // 
+    const { categories,loading,error} = useSelector((state)=>state.categorySlice)
     useEffect(() => { 
-            getAllCategories("?limit=6");
+        dispatch(getAlcategories());
     }, []);
 
     useEffect(() => { 
@@ -39,8 +43,8 @@ const CategoriesListSidebar = memo(({isOpen, closeSidebar}) => {
             {!loading && categories &&  
                 <ul style={{maxHeight: isOpen  ? `${(categories.length + 1) * 28 + ((categories.length ) * 4) + (oneCategoryOpen ? 80 : 0) }px` : '0px' ,}} 
             className={`flex flex-col gap-1 pl-2 text-sm trans overflow-y-hidden`}>
-                {<NavLink to={"categories/allCategories"} className={ ({ isActive }) => `w-full ${ isActive ? "text-main-color pl-1" : " "}  trans py-1  hover:bg-hover-color hover:pl-1 rounded-sm  flex items-center justify-between`}>
-                    <p className='flex gap-1 items-center   '>
+                {<NavLink to={"/allcategories"} className={ ({ isActive }) => `w-full ${ isActive ? "text-main-color pl-1" : " "}  trans py-1  hover:bg-hover-color hover:pl-1 rounded-sm  flex items-center justify-between`}>
+                    <p className='flex gap-1 items-center'>
                         <RxDot className={`text-xs  mt-0.5 `} />
                         All Categories
                     </p>
@@ -59,13 +63,13 @@ const CategoriesListSidebar = memo(({isOpen, closeSidebar}) => {
 
                             <ul style={{maxHeight: openCategory[index] ? `60px` : "0px",}} 
                                 className={`flex flex-col gap-1 pl-3 text-sm trans w-full overflow-y-hidden`}>
-                                    <NavLink to={`categories/${cat.slug}/subcategoriesList`}  onClick={() => {if (window.innerWidth < 768) closeSidebar()}} className={({ isActive }) => ` cursor-pointer trans w-full ${isActive ? "text-main-color pl-1" : "text-sec-color "} hover:bg-hover-color  rounded-sm py-1 hover:pl-1 flex items-center justify-between`}>
+                                    <NavLink to={`/categories/${cat.slug}/${cat._id}`}  onClick={() => {if (window.innerWidth < 768) closeSidebar()}} className={({ isActive }) => ` cursor-pointer trans w-full ${isActive ? "text-main-color pl-1" : "text-sec-color "} hover:bg-hover-color  rounded-sm py-1 hover:pl-1 flex items-center justify-between`}>
                                         <p className='flex gap-1 items-center '>
                                             <RxDot className={`text-xs  mt-0.5  `} />
                                             Subcategories List
                                         </p>
                                     </NavLink>
-                                    <NavLink to={`categories/${cat.slug}/newSubcategory`}  onClick={() => {if (window.innerWidth < 768) closeSidebar()}} className={({ isActive }) => ` cursor-pointer trans w-full ${isActive ? "text-main-color pl-1" : "text-sec-color "} hover:bg-hover-color  rounded-sm py-1 hover:pl-1 flex items-center justify-between`}>
+                                    <NavLink to={`/subcat/AddNewsubact/${cat._id}`}  onClick={() => {if (window.innerWidth < 768) closeSidebar()}} className={({ isActive }) => ` cursor-pointer trans w-full ${isActive ? "text-main-color pl-1" : "text-sec-color "} hover:bg-hover-color  rounded-sm py-1 hover:pl-1 flex items-center justify-between`}>
                                         <p className='flex gap-1 items-center '>
                                             <RxDot className={`text-xs  mt-0.5  `} />
                                             New Subcategory
