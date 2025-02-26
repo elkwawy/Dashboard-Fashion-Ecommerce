@@ -135,7 +135,7 @@ export default function AddNewCategory() {
             )}
           </div>
         </div>
-        <img src={avater} className="w-[510px]  object-cover" alt="" />
+        <img src={avater} className="hidden md:block w-[36%]  object-cover" alt="" />
       </div>
     </section>
   );

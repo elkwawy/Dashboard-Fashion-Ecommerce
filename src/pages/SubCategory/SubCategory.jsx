@@ -36,9 +36,6 @@ const handlePreviousPage = () => {
     dispatch(setPage(currentPage - 1));
   }
 };
-
-
-  
   console.log(subCategory);
   
      
@@ -57,6 +54,7 @@ const handlePreviousPage = () => {
 
    const handelDelet = async(id)=>{
         await dispatch(deletesubCategory({id}))
+       
       }
 
   return (
@@ -105,11 +103,7 @@ const handlePreviousPage = () => {
                     filteredSubCategories.map((subcat) => (
                       <tr key={subcat._id}>
                         <td className="px-2 flex items-center justify-start gap-1 py-3 text-sm font-medium text-black whitespace-nowrap">
-                          <img
-                            src={subcat.SubCategoryProducts?.[0]?.image || "/shop-clothing-clothes-shop-hanger-modern-shop-boutique.jpg"}
-                            alt={subcat.name}
-                            className="min-w-14 w-14 h-14 min-h-14 rounded-lg"
-                          />
+                         
                           <span>{subcat.name}</span>
                         </td>
                         <td className="px-12 py-3 text-sm text-black whitespace-nowrap">

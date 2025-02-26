@@ -133,11 +133,12 @@ const categorySlice = createSlice({
   name: "category",
   initialState: {
     categories: [],
-    category: {},
     loading: false,
     loadingAdd: false,
+    loadingUpdate: false,
     error: null,
     subCategory: [],
+    updatecategories: [],
     subid: "",
   },
   reducers: {
@@ -180,18 +181,21 @@ const categorySlice = createSlice({
       })
       .addCase(specificSpicificCategory.fulfilled, (state, action) => {
         state.loading = false;
-        state.categories = [action.payload];
+        state. updatecategories = [action.payload];
         state.error = null;
       })
-
-
       .addCase(updateCategory.fulfilled, (state, action) => {
-        state.categories = state.categories.map((category) =>
+        state.updatecategories = state.updatecategories.map((category) =>
           category._id === action.payload._id ? action.payload : category
         );
+        state.loadingUpdate = false;
       })
       .addCase(updateCategory.rejected, (state, action) => {
         state.error = action.payload || "Something went wrong";
+      })
+      .addCase(updateCategory.pending, (state, action) => {
+        state.loadingUpdate = true;
+       
       })
 
       .addCase(AddNewcategory.pending, (state) => {

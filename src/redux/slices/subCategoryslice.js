@@ -3,6 +3,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import sweetalert from "../../utils/sweetalert";
 import { API } from "../../Api/Api";
+import { updateCategory } from "./CategorySlice";
 
 const token = JSON.parse(Cookies.get("token"))
 
@@ -122,7 +123,6 @@ export const deletesubCategory = createAsyncThunk(
 
 
 
-
 const subCategorySlice = createSlice({
   name: "subCategory",
   initialState: {
@@ -130,6 +130,8 @@ const subCategorySlice = createSlice({
     currentPage: 1,
     limit:5,
     loading: false,
+    loadingAdd: false,
+    loadingUpdate: false,
     error: null,
   },
   reducers: {
@@ -154,29 +156,47 @@ const subCategorySlice = createSlice({
       })
       .addCase(updatespicificSubcategory.fulfilled, (state, action) => {
         state.subCategory = action.payload;
-        state.loading = false;
+        state.loadingUpdate = false;
         state.error = null;
       })
       .addCase(updatespicificSubcategory.rejected, (state, action) => {
-        state.loading = false;
+        state.loadingUpdate = false;
         state.error = action.payload || "Failed to update subcategory";
       })
+      .addCase(updatespicificSubcategory.pending, (state) => {
+        state.loadingUpdate = true;
+    })
+      
       .addCase(AddNewSubcategory.fulfilled, (state, action) => {
+        if (!Array.isArray(state.subCategory)) {
+            state.subCategory = [];
+        }
         state.subCategory.push(action.payload);
-        state.loading = false;
         state.error = null;
-      })
+    })
+   
       .addCase(AddNewSubcategory.rejected, (state, action) => {
-        state.loading = false;
+        state.loadingAdd = false;
         state.error = action.payload || "Failed to add subcategory";
       })
+      .addCase(AddNewSubcategory.pending, (state, action) => {
+        state.loadingAdd = true;
+        state.error = null;
+      })
       .addCase(deletesubCategory.pending, (state) => {
-        state.loading = false;
+        state.loadingAdd = false;
         state.error = null;
       })
       .addCase(deletesubCategory.fulfilled, (state, action) => {
-        state.subCategory = state.subCategory.filter(subCate => subCate._id !== action.meta.arg.id);
-        state.error = null;
+        if (!state.subCategory || !Array.isArray(state.subCategory.data)) {
+            state.subCategory = { ...state.subCategory, data: [] }; 
+        }
+        state.subCategory = {
+            ...state.subCategory, 
+            data: state.subCategory.data.filter(
+                (item) => item._id !== action.meta.arg.id
+            ),
+        };
     })
       .addCase(onespicificSubcategory.pending, (state) => {
         state.loading = true;
