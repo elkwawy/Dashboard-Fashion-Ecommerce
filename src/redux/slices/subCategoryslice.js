@@ -171,6 +171,7 @@ const subCategorySlice = createSlice({
             state.subCategory = [];
         }
         state.subCategory.push(action.payload);
+        state.loadingAdd = false;
         state.error = null;
     })
    
