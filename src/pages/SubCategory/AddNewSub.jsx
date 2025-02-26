@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { AddNewSubcategory } from '../../redux/slices/subCategoryslice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import sweetalert from '../../utils/sweetalert';
 import toast from 'react-hot-toast';
+import avater from "../../assets/avater/update1.svg";
 
 export default function AddNewSub() {
+    const {loadingAdd} = useSelector((state) => state.subCategory);
      const [name, setName] = useState("");
      const dispatch = useDispatch();
      const {id} =useParams()
@@ -28,8 +30,9 @@ export default function AddNewSub() {
   return (
     <>
     <h2 className='text-2xl font-semibold'>Add New Sub Category</h2>
-     <div className='rounded-xl flex items-center flex-col bg-white my-4 p-4 min-h-screen space-y-3'>
-     <div className="flex flex-col md:flex-row gap-4 w-full  justify-center items-start ">
+     <div className='rounded-xl flex flex-col md:flex-row h-full items-center  gap-4 bg-white my-4 p-4 min-h-screen space-y-3'>
+    <div className='flex-1 md:h-full w-full  md:justify-center justify-start flex flex-col space-y-2 order-2 md:order-1'>
+    <div className="flex flex-col gap-4 w-full justify-center items-start   ">
                    <h2 className="text-nowrap">Subcategory Name</h2>
                     <input
                         type="text"
@@ -39,7 +42,7 @@ export default function AddNewSub() {
                         onChange={(e) => setName(e.target.value)}
                     />
                    </div>
-                   <div className="flex flex-col md:flex-row gap-4 w-full justify-center items-start">
+                   <div className="flex flex-col gap-4 w-full justify-center items-start">
                    <h2 className="text-nowrap min-w-[130px]">category</h2>
 
                     <input
@@ -50,9 +53,19 @@ export default function AddNewSub() {
                         value={id}
                     />
                    </div>
-                   <button className="bg-main-color px-8 py-2  text-center text-xl text-white rounded-lg" onClick={AddNewSubCategory}>
+                   <div className='w-fit'>
+                   {loadingAdd ? <button className="bg-main-color px-8 py-2 w-[120px] h-[45px] text-center text-xl text-white rounded-lg" >
+                        <img  src="/public/loadingSpinnerW.svg"
+                  className="w-8 mx-auto"
+                  alt=" Loading..." />
+                    </button> : ( <button className="bg-main-color hover:opacity-90 px-8 py-2 w-[120px] h-[45px]  text-center text-xl text-white rounded-lg" onClick={AddNewSubCategory}>
                         Save
-                    </button>
+                    </button>)}
+                   </div>
+                  
+    </div>
+
+                   <img src={avater} className=" w-[36%]  order-1 md:order-2 flex-2 object-cover" alt="" />
 
 </div>
     </>

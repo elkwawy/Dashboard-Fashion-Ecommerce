@@ -22,6 +22,11 @@ export default function SubCategory() {
 
   console.log(subCategory);
 
+
+
+  
+     
+
   const totalPages = subCategory.totalDocuments
     ? Math.ceil(subCategory.totalDocuments / limit)
     : 0;
@@ -38,6 +43,7 @@ export default function SubCategory() {
     }
   };
 
+
   useEffect(() => {
     if (id) {
       dispatch(spicificSubcategory({ id: id, page: currentPage, limit }));
@@ -50,9 +56,11 @@ export default function SubCategory() {
       )
     : [];
 
+
   const handelDelet = async (id) => {
     await dispatch(deletesubCategory({ id }));
   };
+
 
   return (
     <section className="-mt-5">
@@ -110,6 +118,7 @@ export default function SubCategory() {
                   ) : filteredSubCategories.length > 0 ? (
                     filteredSubCategories.map((subcat) => (
                       <tr key={subcat._id}>
+
                         <td className="px-2 pl-4 flex items-center justify-start gap-1 py-3 text-sm font-medium text-black whitespace-nowrap">
                           <span>{subcat.name}</span>
                         </td>
