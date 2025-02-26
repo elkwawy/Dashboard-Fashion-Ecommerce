@@ -9,16 +9,14 @@ import { FaEdit } from "react-icons/fa";
 import Loader from "../../utils/Loader";
 import useUserHook from "../../hooks/useUserHook";
 export default function UsersList() {
-  const { getAllUsers, users, totalUsers, deleteUser, runUseEffect } =
+  const { getAllUsers, users, loading, totalUsers, deleteUser, runUseEffect } =
     useUserHook();
-  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 6;
   const [searchTerm, setSearchTerm] = useState("");
   useEffect(() => {
     getAllUsers(
-      `?role=user&limit=${usersPerPage}&sort=-createdAt&page=${currentPage}&search=${searchTerm}`,
-      setLoading
+      `?role=user&limit=${usersPerPage}&sort=-createdAt&page=${currentPage}&search=${searchTerm}`
     );
   }, [currentPage, runUseEffect, searchTerm]);
 

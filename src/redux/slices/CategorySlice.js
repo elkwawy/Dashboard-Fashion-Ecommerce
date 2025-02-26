@@ -28,7 +28,7 @@ export const specificCategory = createAsyncThunk(
   async ({ id }) => {
     const options = {
       method: "GET",
-      url: `https://ecommerce-dot-code.vercel.app/api/category/${id}/subcategories`,
+      url: `https://ecommerce-dot-code.vercel.app/api/category/${id}/subcategories?limit=10`,
     };
     try {
       const response = await axios.request(options);

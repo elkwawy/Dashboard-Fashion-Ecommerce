@@ -5,7 +5,6 @@ import sweetalert from "../../utils/sweetalert";
 import { API } from "../../Api/Api";
 import { updateCategory } from "./CategorySlice";
 
-const token = JSON.parse(Cookies.get("token"))
 
 export const spicificSubcategory = createAsyncThunk(
   "subCategory/spicificSubcategory",
@@ -128,7 +127,7 @@ const subCategorySlice = createSlice({
   initialState: {
     subCategory: [],
     currentPage: 1,
-    limit:5,
+    limit:6,
     loading: false,
     loadingAdd: false,
     loadingUpdate: false,
