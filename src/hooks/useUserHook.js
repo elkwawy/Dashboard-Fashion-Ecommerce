@@ -8,9 +8,11 @@ import { showToast } from "../utils/showToast";
 const useUserHook = () => {
   const [users, setUsers] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
+  const [loading, setLoading] = useState(0);
+
   const Navigate = useNavigate();
 
-  const getAllUsers = async (conditions, setLoading) => {
+  const getAllUsers = async (conditions) => {
     setLoading(true);
     try {
       const response = await axios.get(
@@ -97,6 +99,7 @@ const useUserHook = () => {
     users,
     totalUsers,
     getAllUsers,
+    loading,
     deleteUser,
     runUseEffect,
     addNewUser,
