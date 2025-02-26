@@ -9,15 +9,18 @@ import {
 import RootLayout from "./pages/RootLayout";
 import Loader from "./utils/Loader";
 
-
 import Products from "./pages/products/Products";
 import AddOrUpdateProduct from "./pages/products/AddOrUpdateProduct";
 
 const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 
-const UsersList = React.lazy(() => import("./pages/Users/UsersList"));
-const AddUser = React.lazy(() => import("./pages/Users/AddUser"));
-const UpdataUser = React.lazy(() => import("./pages/Users/UpdateUser"));
+// const UsersList = React.lazy(() => import("./pages/Users/UsersList"));
+// const AddUser = React.lazy(() => import("./pages/Users/AddUser"));
+// const UpdataUser = React.lazy(() => import("./pages/Users/UpdateUser"));
+
+import UsersList from "./pages/Users/UsersList";
+import AddUser from "./pages/Users/AddUser";
+import UpdataUser from "./pages/Users/UpdateUser";
 
 const AdminList = React.lazy(() => import("./pages/admin/AdminList"));
 const AddNewAdmin = React.lazy(() => import("./pages/admin/AddNewAdmin"));
@@ -25,15 +28,15 @@ const AddNewAdmin = React.lazy(() => import("./pages/admin/AddNewAdmin"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 const Login = React.lazy(() => import("./Auth/Login"));
 
+import AllCategory from "./pages/Categories/AllCategory";
+import AddNewCategory from "./pages/Categories/AddNewCategory";
+import UpdateCategory from "./pages/Categories/UpdateCategory";
 
-import AllCategory from './pages/Categories/AllCategory';
-import AddNewCategory from './pages/Categories/AddNewCategory';
-import UpdateCategory from './pages/Categories/UpdateCategory';
-
-import SubCategory from './pages/SubCategory/SubCategory';
-import AddNewSub from './pages/SubCategory/AddNewSub';
-import UpdateSubCat from './pages/SubCategory/UpdateSubCat';
+import SubCategory from "./pages/SubCategory/SubCategory";
+import AddNewSub from "./pages/SubCategory/AddNewSub";
+import UpdateSubCat from "./pages/SubCategory/UpdateSubCat";
 import Orders from "./pages/Orders/Orders";
+
 
 // add routes here
 const routes = [
@@ -46,16 +49,15 @@ const routes = [
   { path: "/user/usersList", element: <UsersList /> },
   { path: "/user/newUser", element: <AddUser /> },
   { path: "/user/updateUser/:id", element: <UpdataUser /> },
-  {path:'/allcategories', element:<AllCategory/>},
-  {path:"/addNewCategory",element:<AddNewCategory/>},
-  {path:`/cattegory/updatCategory/:id`,element:<UpdateCategory/>},
-  {path:`/categories/:categoryName/:id`,element:<SubCategory/>},
-  {path:'/subcat/AddNewsubact/:id',element:<AddNewSub/>},
-  {path:`/subcat/updatsubact/:id`,element:<UpdateSubCat/>},
-  {path:'/order/orderList',element:<Orders/>},
+  { path: "/allcategories", element: <AllCategory /> },
+  { path: "/addNewCategory", element: <AddNewCategory /> },
+  { path: `/cattegory/updatCategory/:id`, element: <UpdateCategory /> },
+  { path: `/categories/:categoryName/:id`, element: <SubCategory /> },
+  { path: "/subcat/AddNewsubact/:id", element: <AddNewSub /> },
+  { path: `/subcat/updatsubact/:id`, element: <UpdateSubCat /> },
+  { path: "/order/orderList", element: <Orders /> },
   { path: "*", element: <NotFound /> },
 ];
-
 
 const Router = createBrowserRouter(
   createRoutesFromElements(

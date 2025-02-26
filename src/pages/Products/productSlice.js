@@ -13,7 +13,9 @@ export const allProduct = createAsyncThunk(
       const response = await axios.get(
         `${API.product}?limit=${limit}&sort=-createdAt&page=${page}&search=${search || ""}`
       );
+      console.log("1 Product", response.data);
       return response.data;
+      
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
