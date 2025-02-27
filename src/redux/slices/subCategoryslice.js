@@ -3,7 +3,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import sweetalert from "../../utils/sweetalert";
 import { API } from "../../Api/Api";
-import { updateCategory } from "./CategorySlice";
 
 
 export const spicificSubcategory = createAsyncThunk(
