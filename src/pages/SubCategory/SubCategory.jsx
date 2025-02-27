@@ -22,11 +22,6 @@ export default function SubCategory() {
 
   console.log(subCategory);
 
-
-
-  
-     
-
   const totalPages = subCategory.totalDocuments
     ? Math.ceil(subCategory.totalDocuments / limit)
     : 0;
@@ -43,7 +38,6 @@ export default function SubCategory() {
     }
   };
 
-
   useEffect(() => {
     if (id) {
       dispatch(spicificSubcategory({ id: id, page: currentPage, limit }));
@@ -56,11 +50,19 @@ export default function SubCategory() {
       )
     : [];
 
-
   const handelDelet = async (id) => {
     await dispatch(deletesubCategory({ id }));
   };
 
+  const handleSale = (subcat) => {
+    const sale = 0;
+    subcat.map((subcat) => {
+      if (subcat.price > subcat.priceAfterDiscount) {
+        sale += subcat.price - subcat.priceAfterDiscount;
+      }
+    });
+    return sale > 0 ? `${sale} USD` : "No Sale";
+  };
 
   return (
     <section className="-mt-5">
@@ -118,7 +120,6 @@ export default function SubCategory() {
                   ) : filteredSubCategories.length > 0 ? (
                     filteredSubCategories.map((subcat) => (
                       <tr key={subcat._id}>
-
                         <td className="px-2 pl-4 flex items-center justify-start gap-1 py-3 text-sm font-medium text-black whitespace-nowrap">
                           <span>{subcat.name}</span>
                         </td>
@@ -126,14 +127,12 @@ export default function SubCategory() {
                           {subcat.SubCategoryProducts?.length || 0}
                         </td>
                         <td className="px-4 py-3 text-sm text-black whitespace-nowrap">
-                          {subcat.SubCategoryProducts?.[0]?.price >
-                          subcat.SubCategoryProducts?.[0]?.priceAfterDiscount
-                            ? (
-                                subcat.SubCategoryProducts?.[0]?.price -
-                                subcat.SubCategoryProducts?.[0]
-                                  ?.priceAfterDiscount
-                              ).toFixed(2) + " USD Off"
-                            : "No Sale"}
+                          {subcat.SubCategoryProducts.reduce(
+                            (total, product) =>
+                              total +
+                              (product.price - product.priceAfterDiscount),
+                            0
+                          )}
                         </td>
                         <td className="px-4 py-3 text-sm whitespace-nowrap">
                           <div className="flex items-center w-fit border border-[#D5D5D5] rounded-md overflow-hidden">
