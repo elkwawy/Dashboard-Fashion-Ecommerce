@@ -70,7 +70,7 @@ const navigate = useNavigate()
 
   return (
     <section>
-      <p className="font-bold text-2xl">Update Category</p>
+      
       <div className="flex  rounded-xl bg-white my-4 p-4 min-h-screen space-y-3">
       
      <div className="space-y-3 flex-1">
@@ -120,27 +120,25 @@ const navigate = useNavigate()
   </label>
 </div>
 
-{loadingUpdate ?  <div className=" w-fit">
+{loadingUpdate ?  <div className=" w-fit text-center">
           <button
-            className="bg-main-color px-8 py-2 text-xl text-white  w-[100px] h-[45px] rounded-lg"
+            className="bg-main-color px-8 py-2 text-xl text-center text-white  w-[130px] h-[45px] rounded-lg"
           >
-           <img src="/public/loadingSpinnerW.svg" alt="Loading..." className="w-10" />
+           <img src="/public/loadingSpinnerW.svg" alt="Loading..." className="w-10 m-auto" />
           </button>
         </div> :  <div className=" w-fit">
           <button
             onClick={handelupdateCategory}
-            className="bg-main-color px-8 py-2 text-xl  w-[100px] h-[45px] text-white rounded-lg"
+            className="bg-main-color px-8 py-2 text-xl  w-[130px] h-[45px] text-white rounded-lg"
           >
-            Save
+            Update 
           </button>
         </div>}
        
        
      </div>
-
-
      
-      <img src={addavatar} className="w-[36%] hidden md:block flex-2" alt=""/>
+      <img src={addavatar} className="w-[36%]  hidden md:block flex-2" alt=""/>
      
       </div>
     </section>

@@ -15,12 +15,8 @@ export default function Orders() {
   const dispatch = useDispatch();
    
   const [update,setApdate] = useState(false)
-
-
-
   
-  console.log(orders);
-  
+     console.log(orders);
      
 
   useEffect(() => {
