@@ -74,7 +74,7 @@ const AddOrUpdateProduct = () => {
   const handleSubmit = () => {
     if (!validateProduct()) return;
 
-    if (productData) {
+    if (productData.name) {
       updateProduct(productData._id, product, setLoading);
     } else {
       addProduct(product, setLoading);

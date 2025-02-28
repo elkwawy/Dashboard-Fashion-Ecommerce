@@ -86,7 +86,7 @@ export default function Orders() {
                       {order.orderItems[0]._id}
                       </td>
                       <td className="px-4 py-3 text-sm text-black whitespace-nowrap">
-                      {order.orderItems[0].price}
+                      {order.totalOrderPrice}
                       </td>
                       <td className="px-4 py-3 text-sm whitespace-nowrap">
                       {order.isPaid ? <div className='bg-green-100 px-2 py-1 text-green-800 rounded-lg min-w-[30px] max-w-[70px] text-center'>Paid</div> : <div className='bg-red-100 px-2 py-1 text-red-800 rounded-lg w-fit'>Not Paid</div>}

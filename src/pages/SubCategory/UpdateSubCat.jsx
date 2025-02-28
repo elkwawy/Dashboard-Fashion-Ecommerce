@@ -28,6 +28,8 @@ export default function UpdateSubCat() {
       setName(subCategory[0]?.name || "");
     }
   }, [subCategory]);
+  console.log(subCategory);
+  
 
   const updateSubCategory = async () => {
     try {
