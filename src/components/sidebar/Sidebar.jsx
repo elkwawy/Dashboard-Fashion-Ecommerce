@@ -45,7 +45,7 @@ const Sidebar = memo(({sidebar, closeSidebar}) => {
         //     // Children
         //     {id:'219' , link: "/categories/children", linkCompare:"children", text:"Children", children:[{id:'220' , link: "/categories/children/categoryList", linkCompare:"categoryList", text:'Category List'}, {id:'221' , link: "/categories/children/newCategory", linkCompare:"newCategory", text:'New Category'}]},
         // ]},
-        {id:'203' , link:"categories", icon: <RxLayers className={`mt-0.5 text-lg `} />, text:'Categories', children: [categories]},
+        {id:'203' , link:"categories", icon: <RxLayers className={`mt-0.5 text-lg `} />, text:'Categories', children: [...categories]},
         // End of category
 
         // Order

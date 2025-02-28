@@ -32,9 +32,11 @@ export const API = {
   getSubCategory: `${BASE_URL}/subcategory`,
   updateSubCategory: `${BASE_URL}/subcategory`,
   addNewSubCategory: `${BASE_URL}/subcategory`,
+  getSubcategoryProducts : (id) => `${BASE_URL}/subcategory/${id}`,
 
   /* ======= Product ======= */
   product: `${BASE_URL}/product`,
+  deleteProduct : (id) => `${BASE_URL}/product/${id}`,
   /* ======= Orders ======= */
   showOrders: `${BASE_URL}/order/show`,
   createOrder: `${BASE_URL}/order/create`,
