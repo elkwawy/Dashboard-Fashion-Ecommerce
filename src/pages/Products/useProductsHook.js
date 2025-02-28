@@ -22,7 +22,7 @@ const useProductsHook = () => {
       }
 
       const response = await axios.post(API.product, formData, getAuthHeader());
-      Navigate("/products/products");
+      // Navigate("/products/products");
 
       console.log(response.data);
       showToast("success", response.data.message);

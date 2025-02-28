@@ -54,16 +54,6 @@ export default function SubCategory() {
     await dispatch(deletesubCategory({ id }));
   };
 
-  const handleSale = (subcat) => {
-    const sale = 0;
-    subcat.map((subcat) => {
-      if (subcat.price > subcat.priceAfterDiscount) {
-        sale += subcat.price - subcat.priceAfterDiscount;
-      }
-    });
-    return sale > 0 ? `${sale} USD` : "No Sale";
-  };
-
   return (
     <section className="-mt-5">
       <div className="bg-white min-h-[500px] rounded-xl p-4 py-6 my-4">
@@ -127,12 +117,19 @@ export default function SubCategory() {
                           {subcat.SubCategoryProducts?.length || 0}
                         </td>
                         <td className="px-4 py-3 text-sm text-black whitespace-nowrap">
-                          {subcat.SubCategoryProducts.reduce(
-                            (total, product) =>
-                              total +
-                              (product.price - product.priceAfterDiscount),
-                            0
-                          )}
+                          {(() => {
+                            const discountTotal =
+                              subcat.SubCategoryProducts.reduce(
+                                (total, product) =>
+                                  total +
+                                  (product.price - product.priceAfterDiscount),
+                                0
+                              );
+
+                            return discountTotal > 0
+                              ? `${parseFloat(discountTotal.toFixed(10)).toString()} USD`
+                              : "No Sale";
+                          })()}
                         </td>
                         <td className="px-4 py-3 text-sm whitespace-nowrap">
                           <div className="flex items-center w-fit border border-[#D5D5D5] rounded-md overflow-hidden">

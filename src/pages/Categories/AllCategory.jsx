@@ -19,6 +19,9 @@ export default function AllCategory() {
   const dispatch = useDispatch();
   const { id } = useParams();
 
+  console.log(categories);
+  
+
   useEffect(() => {
     if (id) {
       dispatch(getAlcategories());

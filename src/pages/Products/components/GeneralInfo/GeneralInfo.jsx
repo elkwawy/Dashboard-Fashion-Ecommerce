@@ -41,6 +41,7 @@ export default function GeneralInfo({ product, setProduct, error, setError }) {
       ...prev,
       colors: [...prev.colors, color],
     }));
+    setColorInput("");
   };
 
   const handleRemoveColor = (color) => {
@@ -83,7 +84,6 @@ export default function GeneralInfo({ product, setProduct, error, setError }) {
           ></textarea>
         </div>
 
-        {/* size general */}
         <div className="flex justify-between max-[850px]:flex-col-reverse w-full gap-4">
           {/* Colors Section */}
           <div className="space-y-1.5">
