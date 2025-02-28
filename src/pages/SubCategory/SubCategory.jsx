@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import { FaEdit, FaPlus } from "react-icons/fa";
+import { FaEdit, FaEye, FaPlus } from "react-icons/fa";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { IoTrashOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
-import Loader from "../../utils/Loader";
 import {
   deletesubCategory,
+  setPage,
   spicificSubcategory,
 } from "../../redux/slices/subCategoryslice";
-import { setPage } from "../../redux/slices/subCategoryslice";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import Loader from "../../utils/Loader";
 
 export default function SubCategory() {
   const { loading, error, subCategory, currentPage, limit } = useSelector(
@@ -19,7 +19,8 @@ export default function SubCategory() {
   const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
   const { id } = useParams();
-
+  const {categoryName} = useParams();
+  
   console.log(subCategory);
 
   const totalPages = subCategory.totalDocuments
@@ -80,7 +81,7 @@ export default function SubCategory() {
           </div>
           <div className="w-full md:w-[159px] rounded bg-main-color py-[9px] flex items-center justify-center">
             <NavLink
-              to={`/subcat/AddNewsubact/${id}`}
+              to={`/categories/${categoryName}/AddNewsubact/${id}`}
               className="w-full text-center px-4 text-white"
             >
               <FaPlus className="inline-flex mr-2" /> Add New
@@ -137,18 +138,27 @@ export default function SubCategory() {
                         <td className="px-4 py-3 text-sm whitespace-nowrap">
                           <div className="flex items-center w-fit border border-[#D5D5D5] rounded-md overflow-hidden">
                             <NavLink
-                              to={`/subcat/updatsubact/${subcat._id}`}
-                              className="transition-colors bg-[#FAFBFD] py-1 px-2 border-r border-[#D5D5D5] duration-200 text-main-color focus:outline-none flex items-center justify-center"
+                              to={`/categories/${categoryName}/updatsubact/${subcat._id}`}
+                              className="transition-colors hover:bg-gray-100 bg-[#FAFBFD] py-1 px-2 border-r border-[#D5D5D5] duration-200 text-main-color focus:outline-none flex items-center justify-center"
                             >
                               <FaEdit className="w-5 h-5" />
                             </NavLink>
 
                             <button
-                              className="transition-colors bg-[#FAFBFD] py-1 px-2 duration-200 text-red-500 focus:outline-none flex items-center justify-center"
+                              className="transition-colors hover:bg-gray-100 bg-[#FAFBFD] py-1 px-2 duration-200 text-red-500 focus:outline-none flex items-center justify-center"
                               onClick={() => handelDelet(subcat._id)}
                             >
                               <IoTrashOutline className="w-5 h-5" />
                             </button>
+
+                            {/* Nav to subcat products */}
+                            <NavLink
+                              to={`/categories/${categoryName}/${subcat.slug}/${subcat._id}`}
+                              state={{cateId: id}}
+                              className="transition-colors border-l hover:bg-gray-100 bg-[#FAFBFD] py-1 px-2 border-r border-[#D5D5D5] duration-200 text-main-color focus:outline-none flex items-center justify-center"
+                            >
+                              <FaEye className="w-5 h-5" />
+                            </NavLink>
                           </div>
                         </td>
                       </tr>

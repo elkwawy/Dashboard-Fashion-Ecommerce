@@ -51,7 +51,7 @@ export default function AllCategory() {
           </div>
           <div className="w-full md:w-[159px] rounded bg-main-color py-[9px] flex items-center justify-center">
             <NavLink
-              to={`/addNewCategory`}
+              to={`/categories/addNewCategory`}
               className="w-full text-center px-4 text-white"
             >
               <FaPlus className="inline-flex mr-2" /> Add New
