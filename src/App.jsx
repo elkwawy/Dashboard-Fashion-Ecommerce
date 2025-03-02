@@ -36,6 +36,7 @@ import SubCategory from "./pages/SubCategory/SubCategory";
 import AddNewSub from "./pages/SubCategory/AddNewSub";
 import UpdateSubCat from "./pages/SubCategory/UpdateSubCat";
 import Orders from "./pages/Orders/Orders";
+import OrderDetails from "./pages/Orders/OrderDetails";
 
 
 // add routes here
@@ -51,11 +52,12 @@ const routes = [
   { path: "/user/updateUser/:id", element: <UpdataUser /> },
   { path: "/allcategories", element: <AllCategory /> },
   { path: "/addNewCategory", element: <AddNewCategory /> },
-  { path: `/cattegory/updatCategory/:id`, element: <UpdateCategory /> },
+  { path: `/cattegory/updatCategory`, element: <UpdateCategory /> },
   { path: `/categories/:categoryName/:id`, element: <SubCategory /> },
   { path: "/subcat/AddNewsubact/:id", element: <AddNewSub /> },
-  { path: `/subcat/updatsubact/:id`, element: <UpdateSubCat /> },
+  { path: `/subcat/updatsubact`,element: <UpdateSubCat /> },
   { path: "/order/orderList", element: <Orders /> },
+  {path :"/order/orderDetails/:id",element: <OrderDetails/>},
   { path: "*", element: <NotFound /> },
 ];
 

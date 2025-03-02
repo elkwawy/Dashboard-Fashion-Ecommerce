@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { getAllOrders, setPage } from '../../redux/slices/orderSlice';
 import { CiSearch } from 'react-icons/ci';
 import { FaPlus } from 'react-icons/fa6';
 import Loader from '../../utils/Loader';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
-import { IoTrashOutline } from 'react-icons/io5';
-import { FaEdit } from 'react-icons/fa';
+import { IoEyeSharp, IoTrashOutline } from 'react-icons/io5';
+
 
 export default function Orders() {
     const { loading, error, orders,currentPage ,limit } = useSelector((state) => state.orderSlice);
   const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
-   
+  const navigate = useNavigate()
   const [update,setApdate] = useState(false)
+  const [viewOrders,setViewOrders] = useState(false)
   
      console.log(orders);
      
@@ -24,6 +25,9 @@ export default function Orders() {
       dispatch(getAllOrders());
     
   }, [dispatch, currentPage ,limit]);
+  const handleOrderClick = (order) => {
+    navigate(`/order/orderDetails/${order._id}`, { state: { order } });
+  };
 
   const filteredorders = Array.isArray(orders)
   ? orders.filter((order) =>
@@ -33,7 +37,7 @@ export default function Orders() {
 
   
   return (
-    <section className="-mt-5">
+    <section className="-mt-5 relative">
     <div className="bg-white min-h-[500px] rounded-xl p-4 py-6 my-4">
       <div className="md:flex space-y-4 md:space-y-0 items-center justify-between bg-white">
         <div className="relative md:w-[300px] lg:w-[450px] w-full mr-4">
@@ -55,11 +59,13 @@ export default function Orders() {
             <table className="min-w-full">
               <thead className="bg-[#F8F9FC] border-b border-[#D5D5D5]">
                 <tr>
-                  <th className="py-3.5 px-4 text-[18px] font-[600] tracking-wide text-left text-black">Orders</th>
-                  <th className="px-12 py-3.5 text-[18px] font-[600] tracking-wide text-left text-black">orderID</th>
-                  <th className="px-4 py-3.5 text-[18px] font-[600] tracking-wide text-left text-black">Price</th>
-                  <th className="px-4 py-3.5 text-[18px] font-[600] tracking-wide text-left text-black">Payment Status</th>
+                  <th className="py-3.5 px-4 text-[18px] font-[600] tracking-wide text-left text-black text-nowrap">userId</th>
+                  <th className="px-4 py-3.5 text-[18px] font-[600] tracking-wide text-left text-black text-nowrap">Total Price</th>
+                  <th className="px-4 py-3.5 text-[18px] font-[600] tracking-wide text-left text-black text-nowrap">Payment Status</th>
                   <th className="px-4 py-3.5 text-[18px] font-[600] tracking-wide text-left text-black">Phone</th>
+                  <th className="px-4 py-3.5 text-[18px] font-[600] tracking-wide text-left text-black">
+               Actions
+              </th>
                 </tr>
               </thead>
               <tbody className="divide-y relative divide-gray-[#D5D5D5]">
@@ -74,25 +80,26 @@ export default function Orders() {
                 ) : filteredorders.length > 0 ? (
                   filteredorders.map((order) => (
                     <tr key={order._id}>
-                      <td className="px-2 flex items-center justify-start gap-1 py-3 text-sm font-medium text-black whitespace-nowrap">
-                        <img
-                          src={order.SubCategoryProducts?.[0]?.image || "/shop-clothing-clothes-shop-hanger-modern-shop-boutique.jpg"}
-                          alt={order.name}
-                          className="min-w-14 w-14 h-14 min-h-14 rounded-lg"
-                        />
-                        <span></span>
+                      <td className="px-4 py-3 text-sm text-black whitespace-nowrap cursor-pointer" onClick={() => handleOrderClick(order)}>
+                          {order.user}
                       </td>
-                      <td className="px-12 py-3 text-sm text-black whitespace-nowrap">
-                      {order.orderItems[0]._id}
-                      </td>
+                      
+                     
                       <td className="px-4 py-3 text-sm text-black whitespace-nowrap">
-                      {order.orderItems[0].price}
+                      {parseFloat((order.totalOrderPrice).toFixed(10)).toString()}
                       </td>
                       <td className="px-4 py-3 text-sm whitespace-nowrap">
                       {order.isPaid ? <div className='bg-green-100 px-2 py-1 text-green-800 rounded-lg min-w-[30px] max-w-[70px] text-center'>Paid</div> : <div className='bg-red-100 px-2 py-1 text-red-800 rounded-lg w-fit'>Not Paid</div>}
                       </td>
                       <td className="px-4 py-3 text-sm text-black whitespace-nowrap">
                       {order.shippingAddress.phone}
+                      </td>
+
+                      <td className='px-4 py-3 text-xl whitespace-nowrap text-[#3b82f6] cursor-pointer '  onClick={() => handleOrderClick(order)}>
+                      
+                        <IoEyeSharp />
+
+                      
                       </td>
                     </tr>
                   ))
@@ -109,6 +116,8 @@ export default function Orders() {
         </div>
       </div>
     </div>
+
+   
 
   </section>
   )

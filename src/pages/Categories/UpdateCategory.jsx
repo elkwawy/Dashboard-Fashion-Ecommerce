@@ -2,44 +2,25 @@ import React, { useEffect, useState } from "react";
 import { LuImagePlus } from "react-icons/lu";
 import {
   getAlcategories,
-  specificSpicificCategory,
   updateCategory,
 } from "../../redux/slices/CategorySlice";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import addavatar from "../../assets/avater/update-cuate.svg";
 
 export default function UpdateCategory() {
-  const { updatecategories, loading, loadingUpdate, error } = useSelector(
+  const location = useLocation()
+  const {loading, loadingUpdate, error } = useSelector(
     (state) => state.categorySlice
   );
-  const { id } = useParams();
+  const  id = location.state?.id;
   const dispatch = useDispatch();
-  const [name, setName] = useState("");
+  const [name, setName] = useState(location.state?.name); 
   const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [preview, setPreview] = useState(location.state?.image);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("🛠 ID from useParams:", id);
-    if (id) {
-      dispatch(specificSpicificCategory({ id }));
-      console.log("��� Specific category:", updatecategories[0]);
-    }
-  }, [dispatch, id]);
-
-  console.log(updatecategories);
-
-  useEffect(() => {
-    if (updatecategories && updatecategories.length > 0) {
-      setName(updatecategories[0]?.name || "");
-      setImage(updatecategories[0]?.image || "");
-      setPreview(updatecategories[0]?.image || "");
-    } else {
-      console.warn("🚨 No category data found!");
-    }
-  }, [updatecategories]);
 
   const handelupdateCategory = async () => {
     try {

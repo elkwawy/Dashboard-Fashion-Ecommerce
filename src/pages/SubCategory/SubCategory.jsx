@@ -20,7 +20,6 @@ export default function SubCategory() {
   const dispatch = useDispatch();
   const { id } = useParams();
 
-  console.log(subCategory);
 
   const totalPages = subCategory.totalDocuments
     ? Math.ceil(subCategory.totalDocuments / limit)
@@ -132,12 +131,13 @@ export default function SubCategory() {
                               total +
                               (product.price - product.priceAfterDiscount),
                             0
-                          )}
+                          ).toFixed(2)}
                         </td>
                         <td className="px-4 py-3 text-sm whitespace-nowrap">
                           <div className="flex items-center w-fit border border-[#D5D5D5] rounded-md overflow-hidden">
                             <NavLink
-                              to={`/subcat/updatsubact/${subcat._id}`}
+                              to={"/subcat/updatsubact/"}
+                              state={{ id: subcat._id,name:subcat.name }}
                               className="transition-colors bg-[#FAFBFD] py-1 px-2 border-r border-[#D5D5D5] duration-200 text-main-color focus:outline-none flex items-center justify-center"
                             >
                               <FaEdit className="w-5 h-5" />

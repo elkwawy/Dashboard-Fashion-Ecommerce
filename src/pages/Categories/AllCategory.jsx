@@ -25,6 +25,9 @@ export default function AllCategory() {
     }
   }, [dispatch, id]);
 
+  console.log(categories);
+  
+
   const filteredCategories = Array.isArray(categories)
     ? categories.filter((cat) =>
         cat.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -104,7 +107,8 @@ export default function AllCategory() {
                         <td className="text-sm whitespace-nowrap">
                           <div className="flex items-center w-fit border border-[#D5D5D5] rounded-md overflow-hidden">
                             <NavLink
-                              to={`/cattegory/updatCategory/${cat._id}`}
+                              to={`/cattegory/updatCategory`}
+                              state={{id:cat._id,name:cat.name,image:cat.image}}
                               className="transition-colors bg-[#FAFBFD] py-1 px-2 border-r border-[#D5D5D5] duration-200 text-main-color focus:outline-none flex items-center justify-center"
                             >
                               <FaEdit className="w-5 h-5" />

@@ -41,6 +41,7 @@ export default function GeneralInfo({ product, setProduct, error, setError }) {
       ...prev,
       colors: [...prev.colors, color],
     }));
+    setColorInput("");
   };
 
   const handleRemoveColor = (color) => {
