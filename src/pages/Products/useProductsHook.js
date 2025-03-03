@@ -7,11 +7,10 @@ import { useNavigate } from "react-router-dom";
 const useProductsHook = () => {
   const Navigate = useNavigate();
 
-  const addProduct = async (productData, setLoading) => {
+  const addProduct = async (productData, setLoading, comingFrom) => {
     setLoading(true);
     try {
       const formData = new FormData();
-
       // FormData إضافة كل القيم إلى الـ
       for (const key in productData) {
         if (key === "images") {
@@ -22,7 +21,11 @@ const useProductsHook = () => {
       }
 
       const response = await axios.post(API.product, formData, getAuthHeader());
-      Navigate("/products/products");
+      
+      if (comingFrom)
+        Navigate(comingFrom);
+      else
+        Navigate("/products/products");
 
       console.log(response.data);
       showToast("success", response.data.message);
@@ -36,7 +39,7 @@ const useProductsHook = () => {
     }
   };
 
-  const updateProduct = async (productId, productData, setLoading) => {
+  const updateProduct = async (productId, productData, setLoading, comingFrom) => {
     setLoading(true);
     try {
       const formData = new FormData();
@@ -65,7 +68,10 @@ const useProductsHook = () => {
       );
   
       showToast("success", response.data.message);
-      Navigate("/products/products");
+      if (comingFrom) 
+        Navigate(comingFrom);
+      else 
+        Navigate("/products/products");
   
       return response.data;
     } catch (err) {

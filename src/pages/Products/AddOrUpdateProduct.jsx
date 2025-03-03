@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import GeneralInfo from "./components/GeneralInfo/GeneralInfo";
 import PricingAndStock from "./components/PricingAndStock";
@@ -12,6 +12,9 @@ const AddOrUpdateProduct = () => {
 
   const location = useLocation();
   const productData = location.state?.product || null;
+  const comingFrom = location.state?.comingFrom || null;
+  console.log(comingFrom);
+  
 
   const [product, setProduct] = useState({
     name: productData?.name || "",
@@ -74,10 +77,10 @@ const AddOrUpdateProduct = () => {
   const handleSubmit = () => {
     if (!validateProduct()) return;
 
-    if (productData.name) {
-      updateProduct(productData._id, product, setLoading);
+    if (productData?.name) {
+      updateProduct(productData._id, product, setLoading, comingFrom);
     } else {
-      addProduct(product, setLoading);
+      addProduct(product, setLoading, comingFrom);
     }
   };
 

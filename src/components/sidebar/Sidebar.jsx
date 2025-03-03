@@ -22,9 +22,7 @@ const Sidebar = memo(({sidebar, closeSidebar}) => {
     const loadCategories = async () => { 
         try {
             setCategoryLoading(true);
-            getAllCategories();
-            console.log(categories);
-            
+            getAllCategories();            
         } catch (error) {
             setCategoryLoading(false);
         }finally{
@@ -33,25 +31,16 @@ const Sidebar = memo(({sidebar, closeSidebar}) => {
     }
 
     const links = [
-        {id:'201' ,link:"admin",  icon: <RiAdminLine className={`mt-0.5 text-lg `} />, text:'Admins', children: [{id:'311' , link: "/admin/adminList", linkCompare:"adminList", text:'Admins List'},{id:'312' , link: "/admin/newAdmin", linkCompare:"newAdmin", text:'Add new Admin'}]},
-        {id:'202' , link:"products", icon: <RiShoppingBag2Line className={`mt-0.5 text-lg `} />, text:'Products', children: [{id:'212' , link: "/products/products", linkCompare:"products", text:'Products'}, {id:'213' , link: "/products/newProduct", linkCompare:"newProduct", text:'New Product'}]},
+        {id:'201' ,link:"admin/",  icon: <RiAdminLine className={`mt-0.5 text-lg `} />, text:'Admins', children: [{id:'311' , link: "/admin/adminList", linkCompare:"adminList", text:'Admins List'},{id:'312' , link: "/admin/newAdmin", linkCompare:"newAdmin", text:'Add new Admin'}]},
+        {id:'202' , link:"products/", icon: <RiShoppingBag2Line className={`mt-0.5 text-lg `} />, text:'Products', children: [{id:'212' , link: "/products/products", linkCompare:"products", text:'Products'}, {id:'213' , link: "/products/newProduct", linkCompare:"newProduct", text:'New Product'}]},
         
-        //  Start of category 
-        // {id:'203' , link:"categories", icon: <RxLayers className={`mt-0.5 text-lg `} />, text:'Categories', children: [
-        //     // Women's
-        //     {id:'213' , link: "/categories/women's", linkCompare:"women's", text:"Women's", children:[{id:'214' , link: "/categories/women's/categoryList", linkCompare:"categoryList", text:'Category List'}, {id:'215' , link: "/categories/women's/newCategory", linkCompare:"newCategory", text:'New Category'}]},
-        //     // Men's
-        //     {id:'216' , link: "/categories/men's", linkCompare:"men's", text:"Men's", children:[{id:'217' , link: "/categories/men's/categoryList", linkCompare:"categoryList", text:'Category List'}, {id:'218' , link: "/categories/men's/newCategory", linkCompare:"newCategory", text:'New Category'}]},
-        //     // Children
-        //     {id:'219' , link: "/categories/children", linkCompare:"children", text:"Children", children:[{id:'220' , link: "/categories/children/categoryList", linkCompare:"categoryList", text:'Category List'}, {id:'221' , link: "/categories/children/newCategory", linkCompare:"newCategory", text:'New Category'}]},
-        // ]},
         {id:'203' , link:"categories", icon: <RxLayers className={`mt-0.5 text-lg `} />, text:'Categories', children: [...categories]},
         // End of category
 
         // Order
-        {id:'222' , link:"order", icon: <HiOutlineDocumentAdd className={`mt-0.5 text-lg `} />, text:'Orders', children: [{id:'223' , link: "/order/orderList", linkCompare:"orderList", text:'Orders List'}]},
+        {id:'222' , link:"order/", icon: <HiOutlineDocumentAdd className={`mt-0.5 text-lg `} />, text:'Orders', children: [{id:'223' , link: "/order/orderList", linkCompare:"orderList", text:'Orders List'}]},
         // user
-        {id:'224' , link:"user", icon: <FaRegUser className={`mt-0.5 text-lg `} />, text:'Users', children: [{id:'225' , link: "/user/usersList", linkCompare:"usersList", text:'Users List'}, {id:'226' , link: "/user/newUser", linkCompare:"newUser", text:'New User'}]},
+        {id:'224' , link:"user/", icon: <FaRegUser className={`mt-0.5 text-lg `} />, text:'Users', children: [{id:'225' , link: "/user/usersList", linkCompare:"usersList", text:'Users List'}, {id:'226' , link: "/user/newUser", linkCompare:"newUser", text:'New User'}]},
     ];
     
     
@@ -73,7 +62,7 @@ const Sidebar = memo(({sidebar, closeSidebar}) => {
     
     const isLinkActive = (link) => pathname.includes(link);
     return (
-        <div className={`${sidebar ? "z-20 w-screen max-[700px]:fixed top-0 left-0 backdrop-blur-lg min-[700px]:w-[32%] lg:w-1/4 xl:w-1/6 sm:shadow-[4px_0px_10px_0px_#B3B3B366] " : " shadow-none w-0"} py-3  min-h-screen overflow-x-hidden trans flex flex-col gap-5 `}>
+        <div className={`${sidebar ? "z-20 w-screen max-[700px]:fixed top-0 left-0 backdrop-blur-lg sm:w-[35%] lg:w-1/4 xl:w-1/5 sm:shadow-[4px_0px_10px_0px_#B3B3B366] " : " shadow-none w-0"} py-3  min-h-screen overflow-x-hidden trans flex flex-col gap-5 `}>
             {<div className={`w-full ${sidebar ? "px-3" : "p-0"} trans   border-b-2`}>
                 <button onClick={closeSidebar} className={` h-10  trans w-10 mb-3 rounded-md hover:bg-hover-color flex items-center justify-center`}>
                     <TbLayoutSidebarLeftCollapseFilled className="text-3xl" />

@@ -7,9 +7,7 @@ import { showToast } from "../../utils/showToast";
 
 export const getAdmins = createAsyncThunk(
   "admins/getAdmins",
-  async ({ page,searchTerm }, { rejectWithValue }) => {
-    console.log(page);
-    
+  async ({ page,searchTerm }, { rejectWithValue }) => {    
     try {
       const { headers } = getAuthHeader();
       const response = await axios.get(API.getListOfUsers, {
@@ -155,8 +153,6 @@ const adminsSlice = createSlice({
       })
       .addCase(getAdmins.rejected, (state, action) => {
         state.status = "failed";
-        console.log(action.payload);
-
         if (action.payload) {
           state.error = action.payload;
         } else {

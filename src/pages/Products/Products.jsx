@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { FaPlus } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
@@ -31,7 +31,7 @@ export default function Products() {
       dispatch(setPage(totalPages));
     }
   };
-
+  
   useEffect(() => {
     dispatch(allProduct({ page: currentPage, limit, search: searchQuery }));
   }, [dispatch, currentPage, limit, searchQuery]);

@@ -28,7 +28,7 @@ import AddNewAdmin from './pages/admin/AddNewAdmin';
 import NotFound from './pages/NotFound';
 import Login from "./Auth/Login";
 import SubcategoryProducts from "./pages/SubCategory/SubcategoryProductsPage/SubcategoryProducts.jsx";
-const Products  = React.lazy(() => import( "./pages/products/Products"));
+const Products  = React.lazy(() => import("./pages/Products/Products.jsx"));
 
 
 // add routes here
