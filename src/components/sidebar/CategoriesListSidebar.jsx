@@ -135,7 +135,7 @@ const CategoriesListSidebar = memo(({ isOpen, closeSidebar }) => {
                   </p>
                 </NavLink>
                 <NavLink
-                  to={`/subcat/AddNewsubact/${cat._id}`}
+                  to={`/categories/${cat.slug}/AddNewsubact/${cat._id}`}
                   onClick={() => {
                     if (window.innerWidth < 768) closeSidebar();
                   }}

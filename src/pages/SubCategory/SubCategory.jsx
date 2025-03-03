@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import { FaEdit, FaPlus } from "react-icons/fa";
+import { FaEdit, FaEye, FaPlus } from "react-icons/fa";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { IoTrashOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
-import Loader from "../../utils/Loader";
 import {
   deletesubCategory,
+  setPage,
   spicificSubcategory,
 } from "../../redux/slices/subCategoryslice";
-import { setPage } from "../../redux/slices/subCategoryslice";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import Loader from "../../utils/Loader";
 
 export default function SubCategory() {
   const { loading, error, subCategory, currentPage, limit } = useSelector(
@@ -19,6 +19,9 @@ export default function SubCategory() {
   const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
   const { id } = useParams();
+  const {categoryName} = useParams();
+  
+  console.log(subCategory);
 
 
   const totalPages = subCategory.totalDocuments
@@ -53,16 +56,6 @@ export default function SubCategory() {
     await dispatch(deletesubCategory({ id }));
   };
 
-  const handleSale = (subcat) => {
-    const sale = 0;
-    subcat.map((subcat) => {
-      if (subcat.price > subcat.priceAfterDiscount) {
-        sale += subcat.price - subcat.priceAfterDiscount;
-      }
-    });
-    return sale > 0 ? `${sale} USD` : "No Sale";
-  };
-
   return (
     <section className="-mt-5">
       <div className="bg-white min-h-[500px] rounded-xl p-4 py-6 my-4">
@@ -77,10 +70,10 @@ export default function SubCategory() {
             />
             <CiSearch className="absolute top-2.5 right-3 text-[#B3B3B3] text-xl" />
           </div>
-          <div className="w-full md:w-[159px] rounded bg-main-color py-[9px] flex items-center justify-center">
+          <div className="">
             <NavLink
-              to={`/subcat/AddNewsubact/${id}`}
-              className="w-full text-center px-4 text-white"
+              to={`/categories/${categoryName}/AddNewsubact/${id}`}
+              className="w-full text-center px-4 text-white  md:w-[159px] rounded bg-main-color py-[9px] flex items-center justify-center"
             >
               <FaPlus className="inline-flex mr-2" /> Add New
             </NavLink>
@@ -126,34 +119,52 @@ export default function SubCategory() {
                           {subcat.SubCategoryProducts?.length || 0}
                         </td>
                         <td className="px-4 py-3 text-sm text-black whitespace-nowrap">
-                          {subcat.SubCategoryProducts.reduce(
-                            (total, product) =>
-                              total +
-                              (product.price - product.priceAfterDiscount),
-                            0
-                          ).toFixed(2)}
+                        {(() => {
+                            const discountTotal =
+                              subcat.SubCategoryProducts.reduce(
+                                (total, product) =>
+                                  total +
+                                  (product.price - product.priceAfterDiscount),
+                                0
+                              );
+
+                            return discountTotal > 0
+                              ? `${parseFloat(discountTotal.toFixed(10)).toString()} USD`
+                              : "No Sale";
+                          })()}
                         </td>
                         <td className="px-4 py-3 text-sm whitespace-nowrap">
                           <div className="flex items-center w-fit border border-[#D5D5D5] rounded-md overflow-hidden">
                             <NavLink
-                              to={"/subcat/updatsubact/"}
+                             
+                              className="transition-colors hover:bg-gray-100 bg-[#FAFBFD] py-1 px-2 border-r border-[#D5D5D5] duration-200 text-main-color focus:outline-none flex items-center justify-center"
+                              to={"/subcat/updatsubact"}
                               state={{ id: subcat._id,name:subcat.name }}
-                              className="transition-colors bg-[#FAFBFD] py-1 px-2 border-r border-[#D5D5D5] duration-200 text-main-color focus:outline-none flex items-center justify-center"
+                           
                             >
                               <FaEdit className="w-5 h-5" />
                             </NavLink>
 
                             <button
-                              className="transition-colors bg-[#FAFBFD] py-1 px-2 duration-200 text-red-500 focus:outline-none flex items-center justify-center"
+                              className="transition-colors hover:bg-gray-100 bg-[#FAFBFD] py-1 px-2 duration-200 text-red-500 focus:outline-none flex items-center justify-center"
                               onClick={() => handelDelet(subcat._id)}
                             >
                               <IoTrashOutline className="w-5 h-5" />
                             </button>
+
+                            {/* Nav to subcat products */}
+                            <NavLink
+                              to={`/categories/${categoryName}/${subcat.slug}/${subcat._id}`}
+                              state={{cateId: id}}
+                              className="transition-colors border-l hover:bg-gray-100 bg-[#FAFBFD] py-1 px-2 border-r border-[#D5D5D5] duration-200 text-main-color focus:outline-none flex items-center justify-center"
+                            >
+                              <FaEye className="w-5 h-5" />
+                            </NavLink>
                           </div>
                         </td>
                       </tr>
                     ))
-                  ) : (
+                  ) :filteredSubCategories.length ===0 && searchTerm ? (
                     <tr>
                       <td
                         colSpan="4"
@@ -162,7 +173,13 @@ export default function SubCategory() {
                         No results found for "{searchTerm}"
                       </td>
                     </tr>
-                  )}
+                  ):( <tr className="relative h-[325px]">
+                    <td colSpan="4" className="relative">
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <Loader />
+                      </div>
+                    </td>
+                  </tr>)}
                 </tbody>
               </table>
             </div>

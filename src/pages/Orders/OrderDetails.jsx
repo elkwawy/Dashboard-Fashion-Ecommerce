@@ -31,8 +31,6 @@ export default function OrderDetails() {
       );
        
       setProducts(fetchedProducts.filter(Boolean));
-      console.log(products);
-
       setLoading(false);
     };
 
@@ -55,6 +53,12 @@ export default function OrderDetails() {
               </th>
               <th className="px-4 py-3.5 text-[18px] font-[600] tracking-wide text-left text-black">
                 Price
+              </th>
+              <th className="px-4 py-3.5 text-[18px] font-[600] tracking-wide text-left text-black">
+               Tottal Price
+              </th>
+              <th className="px-4 py-3.5 text-[18px] font-[600] tracking-wide text-left text-black">
+                City
               </th>
               <th className="px-4 py-3.5 text-[18px] font-[600] tracking-wide text-left text-black">
                 Address
@@ -93,6 +97,13 @@ export default function OrderDetails() {
                   </td>
                   <td className="px-4 py-3 text-sm text-black whitespace-nowrap ">
                     {item.price}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-black whitespace-nowrap ">
+                    { item.quantity * item.price}
+                  </td>
+
+                  <td className="px-4 py-3 text-sm text-black whitespace-nowrap ">
+                    {order.shippingAddress.city}
                   </td>
                   <td className="px-4 py-3 text-sm text-black whitespace-nowrap ">
                     {order.shippingAddress.address}

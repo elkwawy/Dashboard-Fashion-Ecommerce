@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getAllOrders, setPage } from '../../redux/slices/orderSlice';
 import { CiSearch } from 'react-icons/ci';
-import { FaPlus } from 'react-icons/fa6';
+import { FaEye, FaPlus } from 'react-icons/fa6';
 import Loader from '../../utils/Loader';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { IoEyeSharp, IoTrashOutline } from 'react-icons/io5';
+import { FaEdit } from 'react-icons/fa';
+import Cookies from "js-cookie";
 
 
 export default function Orders() {
@@ -16,8 +18,65 @@ export default function Orders() {
   const navigate = useNavigate()
   const [update,setApdate] = useState(false)
   const [viewOrders,setViewOrders] = useState(false)
+  const location = useLocation()
+ const [Loading,setLoading] =useState(false)
+  const [users, setUsers] = useState([]);
   
      console.log(orders);
+     
+     const fetchUserName = async (id) => {
+      if (!id) return "unknown user";
+      const token = JSON.parse(Cookies.get("token"));
+     
+      try {
+      } catch (error) {
+        
+        return "unknown user";
+      }
+    
+      try {
+        const res = await fetch(`https://ecommerce-dot-code.vercel.app/api/user/${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": token,
+          },
+        });
+    
+        if (!res.ok) {
+          throw new Error(`${res.status} ${res.statusText}`);
+        }
+    
+        const userData = await res.json();
+        return userData?.data?.name || "unknown user";  
+      } catch (error) {
+        return "unknown user";
+      }
+    };
+    
+    
+     useEffect(() => {
+      const fetchAllUsers = async () => {
+        setLoading(true);
+    
+        const userMap = {};
+        await Promise.all(
+          orders.map(async (order) => {
+            if (!userMap[order.user]) {
+              userMap[order.user] = await fetchUserName(order.user);
+            }
+          })
+        );
+    
+        setUsers(userMap);
+        setLoading(false);
+      };
+    
+      if (orders.length > 0) {
+        fetchAllUsers();
+      }
+    }, [orders]);
+    
      
 
   useEffect(() => {
@@ -28,6 +87,8 @@ export default function Orders() {
   const handleOrderClick = (order) => {
     navigate(`/order/orderDetails/${order._id}`, { state: { order } });
   };
+
+
 
   const filteredorders = Array.isArray(orders)
   ? orders.filter((order) =>
@@ -59,7 +120,7 @@ export default function Orders() {
             <table className="min-w-full">
               <thead className="bg-[#F8F9FC] border-b border-[#D5D5D5]">
                 <tr>
-                  <th className="py-3.5 px-4 text-[18px] font-[600] tracking-wide text-left text-black text-nowrap">userId</th>
+                  <th className="py-3.5 px-4 text-[18px] font-[600] tracking-wide text-left text-black text-nowrap">name</th>
                   <th className="px-4 py-3.5 text-[18px] font-[600] tracking-wide text-left text-black text-nowrap">Total Price</th>
                   <th className="px-4 py-3.5 text-[18px] font-[600] tracking-wide text-left text-black text-nowrap">Payment Status</th>
                   <th className="px-4 py-3.5 text-[18px] font-[600] tracking-wide text-left text-black">Phone</th>
@@ -80,9 +141,10 @@ export default function Orders() {
                 ) : filteredorders.length > 0 ? (
                   filteredorders.map((order) => (
                     <tr key={order._id}>
+                     
                       <td className="px-4 py-3 text-sm text-black whitespace-nowrap cursor-pointer" onClick={() => handleOrderClick(order)}>
-                          {order.user}
-                      </td>
+                {users[order.user] || <div className='w-20 h-4 rounded bg-gray-300'> </div>}
+         </td>
                       
                      
                       <td className="px-4 py-3 text-sm text-black whitespace-nowrap">
@@ -95,29 +157,51 @@ export default function Orders() {
                       {order.shippingAddress.phone}
                       </td>
 
-                      <td className='px-4 py-3 text-xl whitespace-nowrap text-[#3b82f6] cursor-pointer '  onClick={() => handleOrderClick(order)}>
-                      
-                        <IoEyeSharp />
+                       <td className="px-4 py-3 text-sm whitespace-nowrap">
+                                                <div className="flex items-center w-fit border border-[#D5D5D5] rounded-md overflow-hidden">
+                                                  <NavLink
+                                                   
+                                                    className="transition-colors hover:bg-gray-100 bg-[#FAFBFD] py-1 px-2 border-r border-[#D5D5D5] duration-200 text-main-color focus:outline-none flex items-center justify-center"
+                                                    to={""}
+                                                  >
+                                                    <FaEdit className="w-5 h-5" />
+                                                  </NavLink>
+                                                  <div
+                                                    onClick={()=>{ handleOrderClick(order)}}
+                                              
+                                                    className="cursor-pointer transition-colors border-l hover:bg-gray-100 bg-[#FAFBFD] py-1 px-2 border-r border-[#D5D5D5] duration-200 text-main-color focus:outline-none flex items-center justify-center"
+                                                  >
+                                                    <FaEye className="w-5 h-5" />
+                                                  </div>
 
-                      
-                      </td>
+
+                                                   <button
+                                                 className="transition-colors bg-[#FAFBFD] py-1 px-2 duration-200 text-red-500 focus:outline-none flex items-center justify-center" >
+                                                                                <IoTrashOutline className="w-5 h-5" />
+                                                                              </button>
+                                                </div>
+                                              </td>
                     </tr>
                   ))
-                ) : (
+                ) :filteredorders.length === 0 && searchTerm ? (
                   <tr>
                     <td colSpan="4" className="text-center py-4 text-gray-500">
                       No results found for "{searchTerm}"
                     </td>
                   </tr>
-                )}
+                ):( <tr className="relative h-[325px]">
+                  <td colSpan="4" className="relative">
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                      <Loader />
+                    </div>
+                  </td>
+                </tr>)}
               </tbody>
             </table>
           </div>
         </div>
       </div>
     </div>
-
-   
 
   </section>
   )

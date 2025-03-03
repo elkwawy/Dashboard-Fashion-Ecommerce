@@ -9,7 +9,7 @@ import {
   deleteCategory,
   getAlcategories,
 } from "../../redux/slices/CategorySlice";
-import { list } from "postcss";
+
 
 export default function AllCategory() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,6 +18,9 @@ export default function AllCategory() {
   );
   const dispatch = useDispatch();
   const { id } = useParams();
+
+  console.log(categories);
+  
 
   useEffect(() => {
     if (id) {
@@ -52,10 +55,10 @@ export default function AllCategory() {
             />
             <CiSearch className="absolute top-2.5 right-3 text-[#B3B3B3] text-xl" />
           </div>
-          <div className="w-full md:w-[159px] rounded bg-main-color py-[9px] flex items-center justify-center">
+          <div className="">
             <NavLink
               to={`/addNewCategory`}
-              className="w-full text-center px-4 text-white"
+              className="text-center px-4 text-white w-full md:w-[159px] rounded bg-main-color py-[9px] flex items-center justify-center"
             >
               <FaPlus className="inline-flex mr-2" /> Add New
             </NavLink>
@@ -124,13 +127,21 @@ export default function AllCategory() {
                         </td>
                       </tr>
                     ))
-                  ) : (
+                  ) : filteredCategories.length == 0 && searchTerm ? (
                     <tr>
                       <td
                         colSpan="4"
                         className="text-center py-4 text-gray-500"
                       >
                         No results found for "{searchTerm}"
+                      </td>
+                    </tr>
+                  ) : (
+                    <tr className="relative h-[325px]">
+                      <td colSpan="4" className="relative">
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                          <Loader />
+                        </div>
                       </td>
                     </tr>
                   )}
