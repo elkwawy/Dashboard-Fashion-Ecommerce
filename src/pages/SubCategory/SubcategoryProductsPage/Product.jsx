@@ -1,7 +1,7 @@
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import sweetalert from "../../../utils/sweetalert";
 import { deleteProduct } from "./subcategoryProducts";
 
@@ -17,11 +17,10 @@ const Product = ({product}) => {
     }
 
     const navigate = useNavigate();
+    const location = useLocation();
     
-    const handelupdate = (product) => {
-        console.log(product);
-        
-        navigate("/products/updateProduct", { state: { product } });
+    const handelupdate = (product) => {        
+        navigate("/products/updateProduct", { state: { product, comingFrom: location.pathname } });
     };
 
     return (

@@ -1,15 +1,15 @@
-import { useDispatch, useSelector } from "react-redux";
-import { deleteProduct } from "../productSlice";
-import Loader from "../../../utils/Loader";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaEdit } from "react-icons/fa";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Loader from "../../../utils/Loader";
+import { deleteProduct } from "../productSlice";
 
 export default function ProductCard() {
   const navegate = useNavigate();
   const dispatch = useDispatch();
   const { products, loading } = useSelector((state) => state.products);
-
+  
   const deletedProduct = (id) => {
     dispatch(deleteProduct({ id }));
   };

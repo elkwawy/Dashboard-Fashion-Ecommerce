@@ -15,25 +15,35 @@ const SubcategoryProducts = () => {
             dispatch(getSubcategoryProducts(id));
         }
     }, []);
+
     const navigate = useNavigate();
     const location = useLocation();
     const cateId = location.state?.cateId || null;
+
+    const {categoryName, subcatName} = useParams();
 
     const handleNavToNewProduct = () => { 
         const product= { 
             category: cateId,
             SubCategory: id,
         }
-        navigate("/products/newProduct", { state: { product } });
+        navigate("/products/newProduct", { state: { product , comingFrom: location.pathname } });
     }
     return (
         <div className="bg-white p-3 sm:px-5 sm:py-8 h-fit min-h-[550px] max-w-full rounded-md">
-            <button
-            onClick={handleNavToNewProduct}
-                className="trans ml-auto md:w-[159px] rounded bg-main-color py-[9px] flex items-center justify-center hover:bg-blue-600 text-center px-4 text-white"
-            >
-                <FaPlus className="inline-flex mr-2" /> Add Product
-            </button>
+            
+            <div className="w-full flex items-center justify-between">
+                <h1 className="text-2xl font-semibold capitalize">
+                    {categoryName} {subcatName}
+                </h1>
+                <button
+                    onClick={handleNavToNewProduct}
+                    className="trans ml-auto md:w-[159px] rounded bg-main-color py-[9px] flex items-center justify-center hover:bg-blue-600 text-center px-4 text-white"
+                >
+                
+                    <FaPlus className="inline-flex mr-2" /> Add Product
+                </button>
+            </div>
 
 
             {/* New Component here */}
@@ -43,11 +53,11 @@ const SubcategoryProducts = () => {
             }
 
             {
-                loading && <div className="w-full h-full min-h-[450px] flex items-center justify-center"><Loader/></div>
+                loading && <div className="w-full h-full min-h-[500px] flex items-center justify-center"><Loader/></div>
             }
 
             {
-                error && products.length == 0 && <div className="w-full h-full flex items-center justify-center text-sec-color text-lg">{typeof error === "string" ? error : error?.message || "An error occurred"}</div>
+                error && products.length == 0 && <div className="w-full h-full min-h-[500px]  flex items-center justify-center text-sec-color text-lg">{typeof error === "string" ? error : error?.message || "An error occurred"}</div>
             }
         </div>
     )
