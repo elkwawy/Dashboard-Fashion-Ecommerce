@@ -11,11 +11,11 @@ export const allProduct = createAsyncThunk(
   async ({ page, limit, search }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${API.product}?limit=${limit}&sort=-createdAt&page=${page}&search=${search || ""}`
+        `${API.product}?limit=${limit}&sort=-createdAt&page=${page}&search=${
+          search || ""
+        }`
       );
-      console.log("1 Product", response.data);
       return response.data;
-      
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
@@ -28,14 +28,10 @@ export const deleteProduct = createAsyncThunk(
   async ({ id }, { rejectWithValue }) => {
     try {
       const token = JSON.parse(Cookies.get("token"));
-      const result = await sweetalert.deleteOrNot();
-      if (!result.isConfirmed)
-        return rejectWithValue("Product deletion canceled");
 
       await axios.delete(`${API.product}/${id}`, {
         headers: { Authorization: token },
       });
-      showToast("success", "Product deleted successfully");
       return id;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);

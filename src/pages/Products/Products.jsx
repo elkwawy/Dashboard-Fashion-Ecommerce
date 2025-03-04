@@ -31,7 +31,7 @@ export default function Products() {
       dispatch(setPage(totalPages));
     }
   };
-  
+
   useEffect(() => {
     dispatch(allProduct({ page: currentPage, limit, search: searchQuery }));
   }, [dispatch, currentPage, limit, searchQuery]);
@@ -66,14 +66,12 @@ export default function Products() {
               <CiSearch className="absolute top-3 right-3 trans group-hover:text-blue-500" />
             </div>
             {/* add product */}
-            <div className="w-full md:w-[190px] rounded-md trans bg-blue-500 hover:bg-blue-400 py-2 flex items-center justify-center">
-              <NavLink
-                to={"/products/newProduct"}
-                className="w-full flex items-center mr-1 justify-center  px-1  rounded text-white  text-semibold"
-              >
-                <FaPlus className="inline-flex mr-2" /> Add New Product
-              </NavLink>
-            </div>
+            <NavLink
+              to={"/products/newProduct"}
+              className="w-full md:w-[190px] rounded-md trans px-1 text-white  text-semibold bg-blue-500 hover:bg-blue-400 py-2 flex items-center justify-center"
+            >
+              <FaPlus className="inline-flex mr-2" /> Add New Product
+            </NavLink>
           </div>
 
           {/* cards */}

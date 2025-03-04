@@ -4,13 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../../utils/Loader";
 import { deleteProduct } from "../productSlice";
+import sweetalert from "../../../utils/sweetalert";
 
 export default function ProductCard() {
   const navegate = useNavigate();
   const dispatch = useDispatch();
   const { products, loading } = useSelector((state) => state.products);
-  
-  const deletedProduct = (id) => {
+
+  const deletedProduct = async (id) => {
+    const result = await sweetalert.deleteOrNot();
+    if (!result.isConfirmed) return;
     dispatch(deleteProduct({ id }));
   };
 
