@@ -23,6 +23,7 @@ export default function SubCategory() {
   
   console.log(subCategory);
 
+
   const totalPages = subCategory.totalDocuments
     ? Math.ceil(subCategory.totalDocuments / limit)
     : 0;
@@ -69,10 +70,10 @@ export default function SubCategory() {
             />
             <CiSearch className="absolute top-2.5 right-3 text-[#B3B3B3] text-xl" />
           </div>
-          <div className="w-full md:w-[159px] rounded bg-main-color py-[9px] flex items-center justify-center">
+          <div className="">
             <NavLink
               to={`/categories/${categoryName}/AddNewsubact/${id}`}
-              className="w-full text-center px-4 text-white"
+              className="w-full text-center px-4 text-white  md:w-[159px] rounded bg-main-color py-[9px] flex items-center justify-center"
             >
               <FaPlus className="inline-flex mr-2" /> Add New
             </NavLink>
@@ -118,7 +119,7 @@ export default function SubCategory() {
                           {subcat.SubCategoryProducts?.length || 0}
                         </td>
                         <td className="px-4 py-3 text-sm text-black whitespace-nowrap">
-                          {(() => {
+                        {(() => {
                             const discountTotal =
                               subcat.SubCategoryProducts.reduce(
                                 (total, product) =>
@@ -135,8 +136,11 @@ export default function SubCategory() {
                         <td className="px-4 py-3 text-sm whitespace-nowrap">
                           <div className="flex items-center w-fit border border-[#D5D5D5] rounded-md overflow-hidden">
                             <NavLink
-                              to={`/categories/${categoryName}/updatsubact/${subcat._id}`}
+                             
                               className="transition-colors hover:bg-gray-100 bg-[#FAFBFD] py-1 px-2 border-r border-[#D5D5D5] duration-200 text-main-color focus:outline-none flex items-center justify-center"
+                              to={"/subcat/updatsubact"}
+                              state={{ id: subcat._id,name:subcat.name }}
+                           
                             >
                               <FaEdit className="w-5 h-5" />
                             </NavLink>
@@ -160,7 +164,7 @@ export default function SubCategory() {
                         </td>
                       </tr>
                     ))
-                  ) : (
+                  ) :filteredSubCategories.length ===0 && searchTerm ? (
                     <tr>
                       <td
                         colSpan="4"
@@ -169,7 +173,13 @@ export default function SubCategory() {
                         No results found for "{searchTerm}"
                       </td>
                     </tr>
-                  )}
+                  ):( <tr className="relative h-[325px]">
+                    <td colSpan="4" className="relative">
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <Loader />
+                      </div>
+                    </td>
+                  </tr>)}
                 </tbody>
               </table>
             </div>

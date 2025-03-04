@@ -39,6 +39,9 @@ export const deleteProduct = createAsyncThunk(
   }
 );
 
+
+
+
 const productSlice = createSlice({
   name: "product",
   initialState: {
@@ -48,6 +51,7 @@ const productSlice = createSlice({
     currentPage: 1,
     limit: 10,
     loading: false,
+   
   },
   reducers: {
     setPage: (state, action) => {
@@ -76,7 +80,8 @@ const productSlice = createSlice({
       })
       .addCase(deleteProduct.rejected, (state, action) => {
         state.error = action.payload;
-      });
+      })
+
   },
 });
 

@@ -9,7 +9,7 @@ import {
   deleteCategory,
   getAlcategories,
 } from "../../redux/slices/CategorySlice";
-import { list } from "postcss";
+
 
 export default function AllCategory() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,6 +27,9 @@ export default function AllCategory() {
       dispatch(getAlcategories());
     }
   }, [dispatch, id]);
+
+  console.log(categories);
+  
 
   const filteredCategories = Array.isArray(categories)
     ? categories.filter((cat) =>
@@ -52,10 +55,10 @@ export default function AllCategory() {
             />
             <CiSearch className="absolute top-2.5 right-3 text-[#B3B3B3] text-xl" />
           </div>
-          <div className="w-full md:w-[159px] rounded bg-main-color py-[9px] flex items-center justify-center">
+          <div className="">
             <NavLink
-              to={`/categories/addNewCategory`}
-              className="w-full text-center px-4 text-white"
+              to={`/addNewCategory`}
+              className="text-center px-4 text-white w-full md:w-[159px] rounded bg-main-color py-[9px] flex items-center justify-center"
             >
               <FaPlus className="inline-flex mr-2" /> Add New
             </NavLink>
@@ -107,7 +110,8 @@ export default function AllCategory() {
                         <td className="text-sm whitespace-nowrap">
                           <div className="flex items-center w-fit border border-[#D5D5D5] rounded-md overflow-hidden">
                             <NavLink
-                              to={`/cattegory/updatCategory/${cat._id}`}
+                              to={`/cattegory/updatCategory`}
+                              state={{id:cat._id,name:cat.name,image:cat.image}}
                               className="transition-colors bg-[#FAFBFD] py-1 px-2 border-r border-[#D5D5D5] duration-200 text-main-color focus:outline-none flex items-center justify-center"
                             >
                               <FaEdit className="w-5 h-5" />
@@ -123,13 +127,21 @@ export default function AllCategory() {
                         </td>
                       </tr>
                     ))
-                  ) : (
+                  ) : filteredCategories.length == 0 && searchTerm ? (
                     <tr>
                       <td
                         colSpan="4"
                         className="text-center py-4 text-gray-500"
                       >
                         No results found for "{searchTerm}"
+                      </td>
+                    </tr>
+                  ) : (
+                    <tr className="relative h-[325px]">
+                      <td colSpan="4" className="relative">
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                          <Loader />
+                        </div>
                       </td>
                     </tr>
                   )}

@@ -22,6 +22,7 @@ import SubCategory from "./pages/SubCategory/SubCategory";
 import AddNewSub from "./pages/SubCategory/AddNewSub";
 import UpdateSubCat from "./pages/SubCategory/UpdateSubCat";
 import Orders from "./pages/Orders/Orders";
+import OrderDetails from "./pages/Orders/OrderDetails";
 import Dashboard from './pages/Dashboard';
 import AdminList from './pages/admin/AdminList';
 import AddNewAdmin from './pages/admin/AddNewAdmin';
@@ -29,6 +30,7 @@ import NotFound from './pages/NotFound';
 import Login from "./Auth/Login";
 import SubcategoryProducts from "./pages/SubCategory/SubcategoryProductsPage/SubcategoryProducts.jsx";
 const Products  = React.lazy(() => import("./pages/Products/Products.jsx"));
+
 
 
 // add routes here
@@ -45,13 +47,14 @@ const routes = [
   { path: "/user/newUser", element: <AddUser /> },
   { path: "/user/updateUser/:id", element: <UpdataUser /> },
   { path: "/allcategories", element: <AllCategory /> },
-  { path: "/categories/addNewCategory", element: <AddNewCategory /> },
-  { path: `/categories/updatCategory/:id`, element: <UpdateCategory /> },
+  { path: "/addNewCategory", element: <AddNewCategory /> },
+  { path: `/cattegory/updatCategory`, element: <UpdateCategory /> },
   { path: `/categories/:categoryName/:id`, element: <SubCategory /> },
-  { path: `/categories/:categoryName/:subcatName/:id`, element: <SubcategoryProducts /> },
   { path: "/categories/:categoryName/AddNewsubact/:id", element: <AddNewSub /> },
-  { path: `/categories/:categoryName/updatsubact/:id`, element: <UpdateSubCat /> },
+  { path: "/subcat/updatsubact",element: <UpdateSubCat /> },
   { path: "/order/orderList", element: <Orders /> },
+  {path :"/order/orderDetails/:id",element: <OrderDetails/>},
+  { path: `/categories/:categoryName/:subcatName/:id`, element: <SubcategoryProducts /> },
   { path: "*", element: <NotFound /> },
 ];
 
