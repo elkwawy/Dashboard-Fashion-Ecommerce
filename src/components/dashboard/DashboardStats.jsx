@@ -3,7 +3,7 @@ import { HiOutlineShoppingCart, HiTemplate } from "react-icons/hi";
 import useUserHook from "../../hooks/useUserHook";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { allProduct } from "../../pages/products/productSlice";
+import { allProduct } from "../../pages/Products/productSlice";
 import { getAllOrders } from "../../redux/slices/orderSlice";
 import { getAdmins } from "../../redux/slices/adminsSlice";
 import { RiAdminFill } from "react-icons/ri";
