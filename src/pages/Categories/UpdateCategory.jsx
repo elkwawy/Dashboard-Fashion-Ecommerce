@@ -7,7 +7,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import addavatar from "../../assets/avater/update-cuate.svg";
+import addavatar from "../../assets/avater/Update-cuate.svg";
 
 export default function UpdateCategory() {
   const location = useLocation()
