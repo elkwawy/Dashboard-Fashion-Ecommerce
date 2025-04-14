@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { Toaster } from "react-hot-toast";
 import {
   createBrowserRouter,
@@ -23,24 +23,33 @@ import AddNewSub from "./pages/SubCategory/AddNewSub";
 import UpdateSubCat from "./pages/SubCategory/UpdateSubCat";
 import Orders from "./pages/Orders/Orders";
 import OrderDetails from "./pages/Orders/OrderDetails";
-import Dashboard from './pages/Dashboard';
-import AdminList from './pages/admin/AdminList';
-import AddNewAdmin from './pages/admin/AddNewAdmin';
-import NotFound from './pages/NotFound';
+import Dashboard from "./pages/Dashboard";
+import AdminList from "./pages/admin/AdminList";
+import AddNewAdmin from "./pages/admin/AddNewAdmin";
+import NotFound from "./pages/NotFound";
 import Login from "./Auth/Login";
 import SubcategoryProducts from "./pages/SubCategory/SubcategoryProductsPage/SubcategoryProducts.jsx";
-const Products  = React.lazy(() => import("./pages/Products/Products.jsx"));
-
-
+const Products = React.lazy(() => import("./pages/Products/Products.jsx"));
 
 // add routes here
 const routes = [
   { path: "/dashboard", element: <Dashboard /> },
   { path: "/admin/adminList", element: <AdminList /> },
   { path: "/admin/newAdmin", element: <AddNewAdmin /> },
-  { path: "/products/products", element:<Suspense fallback={<div className="w-full h-full flex items-center justify-center bg-white rounded-md"><Loader/></div>}>
-    <Products />
-  </Suspense>},
+  {
+    path: "/products/products",
+    element: (
+      <Suspense
+        fallback={
+          <div className="w-full h-full flex items-center justify-center bg-white rounded-md">
+            <Loader />
+          </div>
+        }
+      >
+        <Products />
+      </Suspense>
+    ),
+  },
   { path: "/products/newProduct", element: <AddOrUpdateProduct /> },
   { path: "/products/updateProduct", element: <AddOrUpdateProduct /> },
   { path: "/user/usersList", element: <UsersList /> },
@@ -50,15 +59,19 @@ const routes = [
   { path: "/addNewCategory", element: <AddNewCategory /> },
   { path: `/cattegory/updatCategory`, element: <UpdateCategory /> },
   { path: `/categories/:categoryName/:id`, element: <SubCategory /> },
-  { path: "/categories/:categoryName/AddNewsubact/:id", element: <AddNewSub /> },
-  { path: "/subcat/updatsubact",element: <UpdateSubCat /> },
+  {
+    path: "/categories/:categoryName/AddNewsubact/:id",
+    element: <AddNewSub />,
+  },
+  { path: "/subcat/updatsubact", element: <UpdateSubCat /> },
   { path: "/order/orderList", element: <Orders /> },
-  {path :"/order/orderDetails/:id",element: <OrderDetails/>},
-  { path: `/categories/:categoryName/:subcatName/:id`, element: <SubcategoryProducts /> },
+  { path: "/order/orderDetails/:id", element: <OrderDetails /> },
+  {
+    path: `/categories/:categoryName/:subcatName/:id`,
+    element: <SubcategoryProducts />,
+  },
   { path: "*", element: <NotFound /> },
 ];
-
-
 
 const Router = createBrowserRouter(
   createRoutesFromElements(
