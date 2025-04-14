@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userSlice from "./slices/userSlice";
-import productSlice from "../pages/products/productSlice";
+import productSlice from "../pages/Products/productSlice";
 import adminsSlice from "./slices/adminsSlice";
 import categorySlice from "./slices/CategorySlice";
 import subCtegoryslice from "./slices/subCategoryslice";
@@ -15,7 +15,7 @@ const store = configureStore({
     admins: adminsSlice,
     subCategory: subCtegoryslice,
     orderSlice,
-    subcategoryProducts : subcategoryProductsSlice,
+    subcategoryProducts: subcategoryProductsSlice,
   },
 });
 
