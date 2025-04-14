@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import RootLayout from "./pages/RootLayout";
 import Loader from "./utils/Loader";
-import AddOrUpdateProduct from "./pages/products/AddOrUpdateProduct";
+import AddOrUpdateProduct from "./pages/Products/AddOrUpdateProduct";
 
 import UsersList from "./pages/Users/UsersList";
 import AddUser from "./pages/Users/AddUser";
