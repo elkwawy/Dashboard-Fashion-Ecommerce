@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { LuImagePlus } from "react-icons/lu";
 import {
   getAlcategories,
@@ -10,17 +10,16 @@ import toast from "react-hot-toast";
 import addavatar from "../../assets/avater/Update-cuate.svg";
 
 export default function UpdateCategory() {
-  const location = useLocation()
-  const {loading, loadingUpdate, error } = useSelector(
+  const location = useLocation();
+  const { loading, loadingUpdate, error } = useSelector(
     (state) => state.categorySlice
   );
-  const  id = location.state?.id;
+  const id = location.state?.id;
   const dispatch = useDispatch();
-  const [name, setName] = useState(location.state?.name); 
+  const [name, setName] = useState(location.state?.name);
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(location.state?.image);
   const navigate = useNavigate();
-
 
   const handelupdateCategory = async () => {
     try {
